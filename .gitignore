@@ -8,4 +8,5 @@ node_modules/
 .github/
 creds.json
 .vscode/settings.json
-.venv
+.venv/
+.DS_Store
