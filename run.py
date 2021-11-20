@@ -1,3 +1,17 @@
+##
+# PwnyTrap
+#
+# Created by David Watters 2021
+# https://github.com/davewatters
+# 
+# PwnyTrap queries the HaveIBeenPwned.com API to determine if a given password
+# or email address has been compromised in a data breach.
+# 
+# The HIBP database and API were created by Troy Hunt
+# https://troyhunt.com ; https://haveibeenpwned.com
+#
+# Python3
+##
 import textwrap
 
 
@@ -7,6 +21,7 @@ def cls():
     Similar to *nix terminal clear or Win cls
     '''
     print("\033[H\033[J", end="")
+    print('123456789+' * 8)
     return
 
 
@@ -57,7 +72,7 @@ def main():
     while True:
         disp_main_page()
         opt = input("Enter your choice [1-4, or 0 to quit]: ")
-        if opt == '0':
+        if opt == '0' or opt == 'q':
             print('Goodbye.')
             break
         elif opt == '1':
