@@ -15,7 +15,6 @@
 import textwrap
 import json
 import hashlib
-from typing import Text
 import requests
 
 
@@ -31,7 +30,7 @@ def cls():
     Similar to *nix terminal clear or Win cls
     '''
     print("\033[H\033[J", end="")
-    print('123456789+' * 8)
+    print('123456789+' * 8) # 123456789+123456789+
     return
 
 
@@ -61,50 +60,51 @@ def help_screen():
         PwnyTrap Help\n
 
         Lots of helpful info goes here.\n
-        TODO explain checking passowrd pwnage\n
-        TODO explain checking email address pwnage\n\n
+        TODO explain checking passowrd pwnage
+        TODO explain checking email address pwnage\n
         TODO Explain the HIBP API\n
         TODO Include a link to the HIBP site and also it's FAQ page\n
 
         Finally, in case you were wondering...\n
-        PwnyTrap is pronounced 'Pony Trap'.  It comes from the leetspeak word 'pwn'\n
+        PwnyTrap is pronounced 'Pony Trap'.  It comes from the leetspeak word 'pwn'
         meaning to be beaten or compromised in some way.\n
         For an explanation check this link: https://en.wikipedia.org/wiki/PWN\n
     """
     print(textwrap.dedent(s))
-    input("Enter to return to the main screen...")
+    input("Enter to return to the main screen..")
     return
 
 
 def check_password():
-    print('Checking password..')
-    #
+    '''
+    Accepts user input for password to check
+    Checks password for inclusion in HIBP breached passwords database
+    '''
+    print('\nChecking password..')
     passwd = input('Enter password to check: ')
-    print()
-    # hash the entered password
-    hash = hashlib.sha1(passwd.encode('utf-8')).hexdigest()
-    print(f'SHA-1 hash digest of entered password: {hash}')
-    # query the api using partial hash for anonymity (first 5 chars)
-    resp = requests.get(HIBP_PWD_API_URL + hash[:5])
-    # 
-    # resp will be a string sha-1 hashes + colon delimiter + count + CRLF pair
-    # will need to split and reformat the lines to get the count
-    #
-    print(f'Response code {resp.status_code}')
-    print(resp.text.splitlines())
-    resp = resp.text.splitlines()
-    hash = hash.upper()
-    print(hash[5:])
-    if hash[5:] in resp:
-        count = resp[36:]
+    paswd_hash = hashlib.sha1(passwd.encode('utf-8')).hexdigest()
+    print(f'SHA-1 hash digest of password: {paswd_hash}')
+    search_hash = paswd_hash[:5].upper()
+    resp = requests.get(HIBP_PWD_API_URL + search_hash)
+    matches = resp.text.splitlines()
+    count = 0
+    for s in matches:
+        h, c = s.split(':')
+        if search_hash + h == paswd_hash.upper():
+            count = int(c)
+            break
+    
+    if count > 0:
         print("Bad news - you've been pwned!")
-        print(f"Password appeared {count} times in the database.")
-        print(f"This password should never be used again.")
+        print(f"Password appeared {count:,} times in the database.")
+        print("This password should never be used again.")
     else:
-        print(f"Good news! Password not found in database.  Remember, this does not mean that it is a GOOD password, just that hasn't yet appeared in an online dump.")
-    #
-    input("\nEnter to return to the main menu...")
+        print("Good news! Password not found in database.")
+        print("Remember, this does NOT mean that it is a GOOD password, just that it hasn't yet appeared in an online dump.")
+
+    input("\nEnter to return to the main menu..")
     return
+
 
 def main():
     '''
@@ -112,8 +112,8 @@ def main():
     '''
     while True:
         disp_main_page()
-        opt = input("Enter your choice [1-4, or 0 to quit]: ")
-        if opt == '0' or opt == 'q':
+        opt = input("Enter your choice [1-4, or q to quit]: ")
+        if opt == 'q':
             print('Goodbye.')
             break
         elif opt == '1':
