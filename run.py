@@ -7,21 +7,23 @@
 # PwnyTrap queries the HaveIBeenPwned.com API to determine if a given password
 # or email address has been compromised in a data breach.
 #
-# The HIBP database and API were created by Troy Hunt
+# The HIBP database and API were created by Troy Hunt and is licensed under
+# the Creative Commons Attribution 4.0 International Licence
 # https://troyhunt.com ; https://haveibeenpwned.com
 #
-# Python3
+# Python3, HIBP API v3
 ##
 import textwrap
 import json
 import hashlib
 import requests
+from requests import status_codes
 
 
 CREDS_FILE = 'creds.json'
 HIBP_PWD_API_URL = 'https://api.pwnedpasswords.com/range/'
 HIBP_API_URL = 'https://haveibeenpwned.com/api/v3/'
-URL_HEADERS = {'User-Agent': 'PwnyTrap'}
+USER_AGENT = {"user-agent": "PwnyTrap"}
 
 
 def cls():
@@ -93,7 +95,7 @@ def check_password():
         if search_hash + h == paswd_hash.upper():
             count = int(c)
             break
-    
+
     if count > 0:
         print("Bad news - you've been pwned!")
         print(f"Password appeared {count:,} times in the database.")
@@ -101,6 +103,66 @@ def check_password():
     else:
         print("Good news! Password not found in database.")
         print("Remember, this does NOT mean that it is a GOOD password, just that it hasn't yet appeared in an online dump.")
+
+    input("\nEnter to return to the main menu..")
+    return
+
+
+class HibpAPI:
+    '''
+    Class to process data from the HIBP API
+    API Services available are: breachedaccount, breaches, breach, dataclass. pasteaccount
+    '''
+    def __init__(self):
+        self.url = HIBP_API_URL
+        self.user_agent = USER_AGENT
+
+        with open(CREDS_FILE) as f:
+            self.api_key = json.load(f)
+
+    def query_api(self, url, email):
+        print(self.api_key)
+        print(self.user_agent)
+        headers = { **self.api_key, **self.user_agent }
+        print(headers)
+        return requests.get(url + email, headers=headers)    
+
+    def check_breached(self, email):
+        breached = False
+        resp = self.query_api(self.url + "breachedaccount/", email)
+        print(f"Response code: {resp.status_code}")
+        if resp.status_code == 200:
+            # resp.text is a string
+            breaches = resp.text.strip('[]')
+            # breaches is a list
+            breaches = breaches.split(",")
+            for breach in breaches:
+                print(breach)
+            breached = True
+        else:
+            print(f"Response code: {resp.status_code}")
+            print("Error calling API")
+            print("Should be an exception handling block here")
+        return breached
+
+
+def check_email():
+    '''
+    Accepts user input for email account to check
+    Checks email for inclusion in HIBP breached accounts database
+    '''
+    hibp = HibpAPI()
+    email = input("Enter email account to check: ")
+    # email = "david@wattersit.com"
+    if "@" in email:
+        found = hibp.check_breached(email)
+
+    if found:
+        print("Bad news - you've been pwned!")
+        print("Email address appears in breach")
+        print("The password used for this service should be changed anywhere that it was used.")
+    else:
+        print("Good news! Email address not found in breach.")
 
     input("\nEnter to return to the main menu..")
     return
@@ -120,6 +182,8 @@ def main():
             help_screen()
         elif opt == '2':
             check_password()
+        elif opt == '3':
+            check_email()
 
 
 ##
