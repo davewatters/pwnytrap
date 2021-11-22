@@ -20,6 +20,7 @@ import requests
 from requests import status_codes
 
 
+APP_VERSION = 'PwnyTrap v1.0'
 CREDS_FILE = 'creds.json'
 HIBP_PWD_API_URL = 'https://api.pwnedpasswords.com/range/'
 HIBP_API_URL = 'https://haveibeenpwned.com/api/v3/'
@@ -41,9 +42,9 @@ def disp_main_page():
     Displays the main greeting and menu options
     '''
     cls()
-    s = """
-        PwnyTrap - Catch bad pa$$words using the Have I Been Pwned API\n\n
-        Options:\n
+    s = f"""
+        {APP_VERSION} -= Catch bad pa$$words using the Have I Been Pwned API =-\n\n
+        App Mode Options:\n
         1. Show Help screen\n
         2. Check password\n
         3. Check email address\n
@@ -58,8 +59,8 @@ def help_screen():
     Displays the help information screen
     '''
     cls()
-    s = """
-        PwnyTrap Help\n
+    s = f"""
+        {APP_VERSION} Help\n
 
         Lots of helpful info goes here.\n
         TODO explain checking passowrd pwnage
@@ -111,7 +112,7 @@ def check_password():
 class HibpAPI:
     '''
     Class to process data from the HIBP API
-    API Services available are: breachedaccount, breaches, breach, dataclass. pasteaccount
+    API Services available are: breachedaccount, breaches, breach, dataclass, pasteaccount
     '''
     def __init__(self):
         self.url = HIBP_API_URL

@@ -1,1 +1,17 @@
-# Your requirements go here
+astroid==2.8.5
+certifi==2021.10.8
+charset-normalizer==2.0.7
+flake8==4.0.1
+idna==3.3
+isort==5.10.1
+lazy-object-proxy==1.6.0
+mccabe==0.6.1
+platformdirs==2.4.0
+pycodestyle==2.8.0
+pyflakes==2.4.0
+pylint==2.11.1
+requests==2.26.0
+toml==0.10.2
+typing_extensions==4.0.0
+urllib3==1.26.7
+wrapt==1.13.3
