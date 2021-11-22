@@ -99,11 +99,11 @@ def check_password():
             break
 
     if count > 0:
-        print("Bad news - you've been pwned!")
+        print("\nBad news - you've been pwned!")
         print(f"Password appeared {count:,} times in the database.")
         print("This password should never be used again.")
     else:
-        print("Good news! Password not found in database.")
+        print("\nGood news! Password not found in database.")
         print("Remember, this does NOT mean that it is a GOOD password, just that it hasn't yet appeared in an online dump.")
 
     input("\nEnter to return to the main menu..")
@@ -131,15 +131,15 @@ class HibpAPI:
         resp = self.query_api(self.url + "breachedaccount/", email)
         if resp.status_code == 200:
             breached = True
-            print("Bad news - you've been pwned!")
+            print("\nBad news - you've been pwned!")
             print("The password used with this account for any of the following services\nshould be changed everywhere that it was used.")
             breaches = resp.json()
             # breaches is now a list of dicts
-            print("Email address appears in the following data breaches..")
+            print(f"\nEmail address appears in the following {len(breaches)} data breaches..")
             for breach in breaches:
                 print(breach['Name'])
         elif resp.status_code == 404:
-            print("Good news! Email address not found in breach data.")
+            print("\nGood news! Email address not found in breach data.")
         else:
             print(f"Response code: {resp.status_code}")
             print("Error calling API")
