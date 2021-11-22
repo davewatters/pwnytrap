@@ -122,10 +122,7 @@ class HibpAPI:
             self.api_key = json.load(f)
 
     def query_api(self, url, email):
-        print(self.api_key)
-        print(self.user_agent)
         headers = { **self.api_key, **self.user_agent }
-        print(headers)
         return requests.get(url + email, headers=headers)    
 
     def check_breached(self, email):
