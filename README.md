@@ -112,32 +112,44 @@ The [PEP8 Online](http://pep8online.com) was used
 
 ## - Deployment -
 
-### GitHub Pages
-The live deployed site can be viewed on GitHub Pages [HERE](https://davewatters.github.io/blackjack)
+### Heroku
+The live deployed site can be viewed on Heroku [HERE](https://ci-pp3-pwnytrap.herokuapp.com)
 
-The Project repository (repo) is at [https://github.com/davewatters/blackjack](https://github.com/davewatters/blackjack)
+The Project repository (repo) is at [https://github.com/davewatters/pwnytrap](https://github.com/davewatters/pwnytrap)
 
 Note: The project repo was initially generated from the [Code Institute Python Essentials template](https://github.com/Code-Institute-Org/python-essentials-template) 
 
-Deployment of the site to GitHub Pages was done as follows:
-
-After final `git push` to the project repo 
-1.  Login to your GitHub account
-1.  Open the project repo 
-1.  Select the 'Settings' tab
-1.  On the left-hand-side menu select the Pages option
-1.  Select the main branch as the source, then click the Save button
-1.  A message will confirm that the site has been published at `https://YOUR-GITHUB-NAME.github.io/REPO-NAME/`
-1.  Test that the site has successfully gone live by clicking on the link
+Deployment of the site to Heroku was done as follows:
+ 
+1.  Login to your Heroku account
+1.  Create a New App
+1.  (Important!) Select the 'Settings' tab first
+1.  Click on 'Reveal Config Vars'
+1.  Add any relevant config vars by entering the KEY/VALUE pair data, e.g. PORT & 8000
+1.  Select 'Add Buildpack'
+1.  (Important!) Select Python first, then select NodeJS
+1.  Select the 'Deploy' tab
+1.  For the Deplyoment Method select GitHub
+1.  Connect to GitHub repo by entering YOUR-REPO-NAME, then Connect
+1.  A message will confirm that your app was successfuly deployed
+1.  Test that the site has successfully gone live by clicking on the 'View' button
+1.  Your app can now be accessed via any browser at: `https://YOUR-APP-NAME.heroku.com`
 
 
 ## - Credits - 
 
-- #_TODO
+-   Project inspired by [Troy Hunt's](https:/troyhunt.com) [Have I Been Pwned](https://haveibeenpwned.com) website
 
-- Inspired by Troy Hunt's Have I Been Pwned site
+-   Full HIBP API v3 Specification Document [HERE](https://haveibeenpwned.com/API/v3)
 
-- [HIBP API v3](https://haveibeenpwned.com/API/v3)
+### Code
+-   No code was directly copied to this project but numerous resources helped me understand what I needed and how best to code it. These include: The official [Python Docs](https://docs.python.org), StackOverflow.com, W3Schools.com, RealPython.com  
+
+-  Other projects using the HIBP API providing inspiration included:
+    https://github.com/Radial01/PwnyCorral
+    https://github.com/lionheart/pwnedpasswords  
+    https://github.com/RubikX/HIBP-Python/
+
 
 ### Acknowledgements
 
