@@ -17,7 +17,7 @@ import textwrap
 import json
 import hashlib
 import requests
-from requests import status_codes
+import re
 
 
 APP_VERSION = 'PwnyTrap v1.0'
@@ -26,6 +26,7 @@ HIBP_PWD_API_URL = 'https://api.pwnedpasswords.com/range/'
 HIBP_API_URL = 'https://haveibeenpwned.com/api/v3/'
 USER_AGENT = {"user-agent": "PwnyTrap"}
 
+REGEX_EMAIL = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}"
 
 def cls():
     '''
@@ -121,22 +122,24 @@ class HibpAPI:
         with open(CREDS_FILE) as f:
             self.api_key = json.load(f)
 
-    def query_api(self, url, email):
-        headers = { **self.api_key, **self.user_agent }
-        return requests.get(url + email, headers=headers)    
+    def query_api(self, url, payload):
+        headers = {**self.api_key, **self.user_agent}
+        return requests.get(url + payload, headers=headers)    
 
     def check_breached(self, email):
         breached = False
         resp = self.query_api(self.url + "breachedaccount/", email)
-        print(f"Response code: {resp.status_code}")
         if resp.status_code == 200:
-            # resp.text is a string
-            breaches = resp.text.strip('[]')
-            # breaches is a list
-            breaches = breaches.split(",")
-            for breach in breaches:
-                print(breach)
             breached = True
+            print("Bad news - you've been pwned!")
+            print("The password used with this account for any of the following services\nshould be changed everywhere that it was used.")
+            breaches = resp.json()
+            # breaches is now a list of dicts
+            print("Email address appears in the following data breaches..")
+            for breach in breaches:
+                print(breach['Name'])
+        elif resp.status_code == 404:
+            print("Good news! Email address not found in breach data.")
         else:
             print(f"Response code: {resp.status_code}")
             print("Error calling API")
@@ -152,15 +155,8 @@ def check_email():
     hibp = HibpAPI()
     email = input("Enter email account to check: ")
     # email = "david@wattersit.com"
-    if "@" in email:
-        found = hibp.check_breached(email)
 
-    if found:
-        print("Bad news - you've been pwned!")
-        print("Email address appears in breach")
-        print("The password used for this service should be changed anywhere that it was used.")
-    else:
-        print("Good news! Email address not found in breach.")
+    hibp.check_breached(email)
 
     input("\nEnter to return to the main menu..")
     return
