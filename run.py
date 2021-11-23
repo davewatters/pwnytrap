@@ -194,11 +194,14 @@ def main():
     '''
     Main program loop
     '''
+    disp_main_page()
     while True:
-        disp_main_page()
         opt = input("Enter your choice [1-4, or q to quit]: ")
-        # TODO input validation
-        if opt == 'q':
+        if (len(opt) != 1) or (opt not in "1234q"):
+            print(f"{opt} is not a valid option. Valid options " +
+                  "are 1, 2, 3, 4 or q.\nPlease try again.")
+            continue
+        elif opt == 'q':
             print('Goodbye.')
             break
         elif opt == '1':
@@ -207,6 +210,7 @@ def main():
             check_password()
         elif opt == '3':
             check_email()
+        disp_main_page()
 
 
 ##
