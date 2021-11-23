@@ -4,11 +4,13 @@
 # Created by David Watters 2021
 # https://github.com/davewatters
 #
-# PwnyTrap queries the HaveIBeenPwned.com API to determine if a given password
-# or email address has been compromised in a data breach.
+# PwnyTrap queries the HaveIBeenPwned.com API to determine
+# if a given password or email address
+# has been compromised in a data breach.
 #
-# The HIBP database and API were created by Troy Hunt and is licensed under
-# the Creative Commons Attribution 4.0 International Licence
+# The HIBP database and API were created by Troy Hunt and is
+# licensed under the Creative Commons Attribution 4.0
+# International Licence
 # https://troyhunt.com ; https://haveibeenpwned.com
 #
 # Python3, HIBP API v3
@@ -26,15 +28,20 @@ HIBP_PWD_API_URL = 'https://api.pwnedpasswords.com/range/'
 HIBP_API_URL = 'https://haveibeenpwned.com/api/v3/'
 USER_AGENT = {"user-agent": "PwnyTrap"}
 
+
 REGEX_EMAIL = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}"
+
+
+# TODO Implement text colours
+
 
 def cls():
     '''
     Clears the screen and places cursor at top left
-    Similar to *nix terminal clear or Win cls
+    Similar to 'nix terminal clear or Win command cls
     '''
     print("\033[H\033[J", end="")
-    print('123456789+' * 8) # 123456789+123456789+
+    print('123456789+' * 8)  # 123456789+123456789+
     return
 
 
@@ -44,7 +51,8 @@ def disp_main_page():
     '''
     cls()
     s = f"""
-        {APP_VERSION} -= Catch bad pa$$words using the Have I Been Pwned API =-\n\n
+        {APP_VERSION}\n
+        -= Catch bad pa$$words using the Have I Been Pwned API =-\n\n
         App Mode Options:\n
         1. Show Help screen\n
         2. Check password\n
@@ -69,10 +77,11 @@ def help_screen():
         TODO Explain the HIBP API\n
         TODO Include a link to the HIBP site and also it's FAQ page\n
 
-        Finally, in case you were wondering...\n
-        PwnyTrap is pronounced 'Pony Trap'.  It comes from the leetspeak word 'pwn'
-        meaning to be beaten or compromised in some way.\n
-        For an explanation check this link: https://en.wikipedia.org/wiki/PWN\n
+        Finally, in case you were wondering...
+        PwnyTrap is pronounced 'Pony Trap'.  It comes from the
+        leetspeak word 'pwn' meaning to be beaten or compromised
+        in some way. For an explanation check this link:
+        https://en.wikipedia.org/wiki/PWN\n
     """
     print(textwrap.dedent(s))
     input("Enter to return to the main screen..")
@@ -84,7 +93,13 @@ def check_password():
     Accepts user input for password to check
     Checks password for inclusion in HIBP breached passwords database
     '''
-    print('\nChecking password..')
+    print('\nChecking password..\n')
+    #
+    # Need to hide password input
+    #
+    print("* Only partial SHA-1 hash of password will be used")
+    print("* Password will not be logged or sent over the internet")
+    # TODO use getpass or similar to hide pwd input
     passwd = input('Enter password to check: ')
     paswd_hash = hashlib.sha1(passwd.encode('utf-8')).hexdigest()
     print(f'SHA-1 hash digest of password: {paswd_hash}')
@@ -99,12 +114,15 @@ def check_password():
             break
 
     if count > 0:
+        # TODO display red text
         print("\nBad news - you've been pwned!")
         print(f"Password appeared {count:,} times in the database.")
         print("This password should never be used again.")
     else:
+        # TODO display green text
         print("\nGood news! Password not found in database.")
-        print("Remember, this does NOT mean that it is a GOOD password, just that it hasn't yet appeared in an online dump.")
+        print("Remember, this does NOT mean that it is a GOOD password,\n" +
+              "just that it hasn't yet appeared in an online dump.")
 
     input("\nEnter to return to the main menu..")
     return
@@ -113,7 +131,8 @@ def check_password():
 class HibpAPI:
     '''
     Class to process data from the HIBP API
-    API Services available are: breachedaccount, breaches, breach, dataclass, pasteaccount
+    API Services available are: breachedaccount, breaches, breach,
+        dataclass, pasteaccount
     '''
     def __init__(self):
         self.url = HIBP_API_URL
@@ -124,21 +143,26 @@ class HibpAPI:
 
     def query_api(self, url, payload):
         headers = {**self.api_key, **self.user_agent}
-        return requests.get(url + payload, headers=headers)    
+        return requests.get(url + payload, headers=headers)
 
     def check_breached(self, email):
         breached = False
         resp = self.query_api(self.url + "breachedaccount/", email)
         if resp.status_code == 200:
             breached = True
+            # TODO display red text
             print("\nBad news - you've been pwned!")
-            print("The password used with this account for any of the following services\nshould be changed everywhere that it was used.")
+            print("The password used with this account for any " +
+                  "of the following services\n" +
+                  "should be changed everywhere that it was used.")
             breaches = resp.json()
             # breaches is now a list of dicts
-            print(f"\nEmail address appears in the following {len(breaches)} data breaches..")
+            print("\nEmail address appears in the following " +
+                  f"{len(breaches)} data breaches..")
             for breach in breaches:
                 print(breach['Name'])
         elif resp.status_code == 404:
+            # TODO display green text
             print("\nGood news! Email address not found in breach data.")
         else:
             print(f"Response code: {resp.status_code}")
@@ -152,7 +176,11 @@ def check_email():
     Accepts user input for email account to check
     Checks email for inclusion in HIBP breached accounts database
     '''
+    print('\nChecking email address..\n')
     hibp = HibpAPI()
+    #
+    #  Put email regex check in place
+    #
     email = input("Enter email account to check: ")
     # email = "david@wattersit.com"
 
@@ -169,6 +197,7 @@ def main():
     while True:
         disp_main_page()
         opt = input("Enter your choice [1-4, or q to quit]: ")
+        # TODO input validation
         if opt == 'q':
             print('Goodbye.')
             break

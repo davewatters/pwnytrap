@@ -113,7 +113,7 @@ The [PEP8 Online](http://pep8online.com) was used
 
 ## - Deployment -
 
-### Heroku
+### Heroku  
 The live deployed site can be viewed on Heroku [HERE](https://ci-pp3-pwnytrap.herokuapp.com)
 
 The Project repository (repo) is at [https://github.com/davewatters/pwnytrap](https://github.com/davewatters/pwnytrap)
