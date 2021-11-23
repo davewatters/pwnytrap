@@ -19,6 +19,7 @@ import textwrap
 import json
 import hashlib
 import requests
+import getpass
 import re
 
 
@@ -94,14 +95,11 @@ def check_password():
     Checks password for inclusion in HIBP breached passwords database
     '''
     print('\nChecking password..\n')
-    #
-    # Need to hide password input
-    #
     print("* Only partial SHA-1 hash of password will be used")
-    print("* Password will not be logged or sent over the internet")
-    # TODO use getpass or similar to hide pwd input
-    passwd = input('Enter password to check: ')
+    print("* Password will not be logged or sent over the internet\n")
+    passwd = getpass.getpass('Enter password to check: ')
     paswd_hash = hashlib.sha1(passwd.encode('utf-8')).hexdigest()
+    print('\nPassword encrypted')
     print(f'SHA-1 hash digest of password: {paswd_hash}')
     search_hash = paswd_hash[:5].upper()
     resp = requests.get(HIBP_PWD_API_URL + search_hash)

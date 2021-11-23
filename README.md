@@ -145,6 +145,7 @@ Deployment of the site to Heroku was done as follows:
 ### Code
 -   No code was directly copied to this project but numerous resources helped me understand what I needed and how best to code it. These include: The official [Python Docs](https://docs.python.org), StackOverflow.com, W3Schools.com, RealPython.com  
 -   Automate the Boring Stuff with Python, 2nd Edition - Al Sweigart. Very helpful as an intro to implementing regex searching in Python and also working with the requests and json modules
+-   https://www.regular-expressions.info/email.html
 -   Other projects using the HIBP API providing inspiration included:  
     https://github.com/Radial01/PwnyCorral  
     https://github.com/lionheart/pwnedpasswords    
