@@ -30,7 +30,9 @@ HIBP_API_URL = 'https://haveibeenpwned.com/api/v3/'
 USER_AGENT = {"user-agent": "PwnyTrap"}
 
 
-REGEX_EMAIL = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}"
+# This regex includes an apostrophe before the @
+# as they are used in Irish email addresses
+REGEX_EMAIL = r"^[a-zA-Z0-9._%'+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
 
 # TODO Implement text colours
@@ -174,17 +176,20 @@ def check_email():
     Accepts user input for email account to check
     Checks email for inclusion in HIBP breached accounts database
     '''
-    print('\nChecking email address..\n')
+    print('\nChecking email address...\n')
     hibp = HibpAPI()
-    #
-    #  Put email regex check in place
-    #
-    email = input("Enter email account to check: ")
-    # email = "david@wattersit.com"
+    email_regex = re.compile(REGEX_EMAIL)
+    while True:
+        email = input("Enter email account to check: ")
+        if not email_regex.search(email):
+            print(f"\n{email} doesn't appear to be a valid email address.")
+            print("Please try again.")
+            continue
+        else:
+            hibp.check_breached(email)
+            break
 
-    hibp.check_breached(email)
-
-    input("\nEnter to return to the main menu..")
+    input("\nEnter to return to the main menu...")
     return
 
 
