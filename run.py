@@ -48,6 +48,45 @@ def cls():
     return
 
 
+def get_yesno(question="Yes or No?", def_opt=True):
+    '''
+    Gets user's response to a Yes or No question.
+    Defaults to True for Yes if Enter key hit.
+    '''
+    if def_opt is None:
+        option = ' [y/n] '
+    elif not def_opt:
+        option = ' [y/N] '
+    else:
+        option = ' [Y/n] '
+  
+    print("")
+    while True:
+        opt = input(question + option).strip()
+        if opt == '':  # enter hit, empty input
+            if def_opt is not None:
+                reply = def_opt
+                break
+            else:
+                print("You must choose a Yes or No option.")
+                print("Valid options are 'Y'/'y' or 'N'/'n'.\n" +
+                      "Please try again.\n")
+                continue
+        elif opt[0] in 'Yy':
+            reply = True
+            break
+        elif opt[0] in 'Nn':
+            reply = False
+            break
+        else:
+            print(f"{opt} is not a valid option.")
+            print("Valid options are 'Y'/'y' or 'N'/'n'.\n" +
+                  "Please try again.\n")
+            continue
+
+    return reply
+
+
 def disp_main_page():
     '''
     Displays the main greeting and menu options
@@ -192,9 +231,9 @@ def check_email():
             continue
         else:
             hibp.check_breached(email)
-            break
 
-    input("\nEnter to return to the main menu...")
+        if not get_yesno("Check another?"):
+            break
     return
 
 
@@ -211,8 +250,7 @@ def check_password():
 
         HibpAPI().check_passwd(passwd)
 
-        opt = input("\nEnter [Y/y] to check another, any other key to exit: ")
-        if (len(opt) != 1) or (opt not in 'Yy'):
+        if not get_yesno("Check another?"):
             break
     return
 
