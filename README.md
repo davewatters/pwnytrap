@@ -70,7 +70,7 @@ It's important to note that the entered password is never sent over the network 
 ## - Future Features -
 - #_TODO
 -   Check Active Directory accounts passowrds using the offline NTLM hash download
--   Scan a company's whole domain email accounts exposure in a breach
+-   Scan a company's whole domain email accounts exposure in a breach 
 <!--  -->
 <!-- End Features -->
 <!--  -->
@@ -98,10 +98,9 @@ It's important to note that the entered password is never sent over the network 
 
 
 ### Code Validation
-The [PEP8 Online](http://pep8online.com) was used
-
-- #_TODO
-
+-   The [PEP8 Online](http://pep8online.com) was used
+-   https://pythex.org was used to test regular expressions with various inputs
+-   #_TODO
 
 ### Bugs
 

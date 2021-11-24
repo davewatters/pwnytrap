@@ -8,7 +8,7 @@
 # if a given password or email address
 # has been compromised in a data breach.
 #
-# The HIBP database and API were created by Troy Hunt and is
+# The HIBP database and API were created by Troy Hunt and
 # licensed under the Creative Commons Attribution 4.0
 # International Licence
 # https://troyhunt.com ; https://haveibeenpwned.com
@@ -91,43 +91,6 @@ def help_screen():
     return
 
 
-def check_password():
-    '''
-    Accepts user input for password to check
-    Checks password for inclusion in HIBP breached passwords database
-    '''
-    print('\nChecking password..\n')
-    print("* Only partial SHA-1 hash of password will be used")
-    print("* Password will not be logged or sent over the internet\n")
-    passwd = getpass.getpass('Enter password to check: ')
-    paswd_hash = hashlib.sha1(passwd.encode('utf-8')).hexdigest()
-    print('\nPassword encrypted')
-    print(f'SHA-1 hash digest of password: {paswd_hash}')
-    search_hash = paswd_hash[:5].upper()
-    resp = requests.get(HIBP_PWD_API_URL + search_hash)
-    matches = resp.text.splitlines()
-    count = 0
-    for s in matches:
-        h, c = s.split(':')
-        if search_hash + h == paswd_hash.upper():
-            count = int(c)
-            break
-
-    if count > 0:
-        # TODO display red text
-        print("\nBad news - you've been pwned!")
-        print(f"Password appeared {count:,} times in the database.")
-        print("This password should never be used again.")
-    else:
-        # TODO display green text
-        print("\nGood news! Password not found in database.")
-        print("Remember, this does NOT mean that it is a GOOD password,\n" +
-              "just that it hasn't yet appeared in an online dump.")
-
-    input("\nEnter to return to the main menu..")
-    return
-
-
 class HibpAPI:
     '''
     Class to process data from the HIBP API
@@ -135,19 +98,34 @@ class HibpAPI:
         dataclass, pasteaccount
     '''
     def __init__(self):
-        self.url = HIBP_API_URL
+        self.api_url = HIBP_API_URL
+        self.pwd_api_url = HIBP_PWD_API_URL
         self.user_agent = USER_AGENT
 
+        # 
+        # MOve to get_api_key method with
+        # try/except error checking for
+        # missing creds file, invalid key, expired key
+        # 
         with open(CREDS_FILE) as f:
             self.api_key = json.load(f)
 
-    def query_api(self, url, payload):
+    def query_api(self, service_param):
+        '''
+        Queries the HIBP API using HTTP GET request to url.
+        Accepts api service and paramater strings.
+        Returns requests Response object.
+        '''
+        url = self.api_url + service_param
         headers = {**self.api_key, **self.user_agent}
-        return requests.get(url + payload, headers=headers)
+        return requests.get(url, headers=headers)
 
     def check_breached(self, email):
+        '''
+        Returns True|False if email is found in database.
+        '''
         breached = False
-        resp = self.query_api(self.url + "breachedaccount/", email)
+        resp = self.query_api("breachedaccount/" + email)
         if resp.status_code == 200:
             breached = True
             # TODO display red text
@@ -170,17 +148,44 @@ class HibpAPI:
             print("Should be an exception handling block here")
         return breached
 
+    def check_passwd(self, password):
+        passwd_hash = hashlib.sha1(password.encode('utf-8')).hexdigest()
+        print('\nPassword encrypted')
+        print(f'SHA-1 hash digest of password: {passwd_hash}')
+        search_hash = passwd_hash[:5].upper()
+        resp = requests.get(HIBP_PWD_API_URL + search_hash)
+        matches = resp.text.splitlines()
+        count = 0
+        for s in matches:
+            h, c = s.split(':')
+            if search_hash + h == passwd_hash.upper():
+                count = int(c)
+                break
+
+        if count > 0:
+            # TODO display red text
+            print("\nBad news - you've been pwned!")
+            print(f"Password appeared {count:,} times in the database.")
+            print("This password should never be used again.")
+        else:
+            # TODO display green text
+            print("\nGood news! Password not found in database.")
+            print("Remember, this does NOT mean that it is a GOOD password," +
+                  "\njust that it hasn't yet appeared in an online dump.")
+
+        return
+
 
 def check_email():
     '''
     Accepts user input for email account to check
     Checks email for inclusion in HIBP breached accounts database
     '''
-    print('\nChecking email address...\n')
+    print('\nChecking email address...')
     hibp = HibpAPI()
     email_regex = re.compile(REGEX_EMAIL)
     while True:
-        email = input("Enter email account to check: ")
+        email = input("\nEnter email account to check: ")
         if not email_regex.search(email):
             print(f"\n{email} doesn't appear to be a valid email address.")
             print("Please try again.")
@@ -190,6 +195,25 @@ def check_email():
             break
 
     input("\nEnter to return to the main menu...")
+    return
+
+
+def check_password():
+    '''
+    Accepts user input for password to check
+    Checks password for inclusion in HIBP breached passwords database
+    '''
+    while True:
+        print('\nChecking password...\n')
+        print("* Only partial SHA-1 hash of password will be used")
+        print("* Password will not be logged or sent over the internet\n")
+        passwd = getpass.getpass('Enter password to check: ')
+
+        HibpAPI().check_passwd(passwd)
+
+        opt = input("\nEnter [Y/y] to check another, any other key to exit: ")
+        if (len(opt) != 1) or (opt not in 'Yy'):
+            break
     return
 
 
