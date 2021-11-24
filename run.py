@@ -59,7 +59,7 @@ def get_yesno(question="Yes or No?", def_opt=True):
         option = ' [y/N] '
     else:
         option = ' [Y/n] '
-  
+
     print("")
     while True:
         opt = input(question + option).strip()
@@ -152,7 +152,7 @@ class HibpAPI:
     def query_api(self, service_param):
         '''
         Queries the HIBP API using HTTP GET request to url.
-        Accepts api service and paramater strings.
+        Accepts string containing api service with parameter.
         Returns requests Response object.
         '''
         url = self.api_url + service_param
@@ -161,6 +161,8 @@ class HibpAPI:
 
     def check_breached(self, email):
         '''
+        Checks if email is in breach database.
+        Accepts email address to check.
         Returns True|False if email is found in database.
         '''
         breached = False
@@ -214,6 +216,19 @@ class HibpAPI:
 
         return
 
+    def show_all_breaches(self):
+        '''
+        Show the full list of breaches currently in the HIBP dump
+        '''
+        resp = self.query_api("breaches")
+        breaches = resp.json()
+        for breach in breaches:
+            print(f"{breach['Name'].strip():<40}", end='')
+
+        get_yesno()
+        return
+
+
 
 def check_email():
     '''
@@ -263,8 +278,8 @@ def main():
     while True:
         opt = input("Enter your choice [1-4, or q to quit]: ")
         if (len(opt) != 1) or (opt not in "1234q"):
-            print(f"{opt} is not a valid option. Valid options " +
-                  "are 1, 2, 3, 4 or q.\nPlease try again.")
+            print(f"\n{opt} is not a valid option. Valid options " +
+                  "are 1, 2, 3, 4 or q.\nPlease try again.\n")
             continue
         elif opt == 'q':
             print('Goodbye.')
@@ -275,6 +290,8 @@ def main():
             check_password()
         elif opt == '3':
             check_email()
+        elif opt == '4':
+            HibpAPI().show_all_breaches()
         disp_main_page()
 
 
