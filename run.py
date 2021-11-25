@@ -22,8 +22,6 @@ import re
 import requests
 import textwrap
 
-from pprint import pprint
-
 
 APP_VERSION = 'PwnyTrap v1.0'
 CREDS_FILE = 'creds.json'
@@ -38,7 +36,12 @@ REGEX_EMAIL = r"^[a-zA-Z0-9._%'+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 REGEX_HTML = r"<[^<]+?>"
 
 
-# TODO Implement text colours
+# ANSI Escape sequences for some simple text colouring
+CLR_RED = '\033[31m'
+CLR_GREEN = '\033[32m'
+CLR_LIGHTRED = '\033[91m'
+CLR_LIGHTGREEN = '\033[92m'
+CLR_END = '\033[0m'
 
 
 def cls():
@@ -91,13 +94,13 @@ def get_yesno(question='', def_opt=True):
     return reply
 
 
-def strip_html(str):
+def strip_html(text):
     '''
     Strip HTML markup tags from passed in string.
     Returns stripped text string.
     '''
     html_regex = re.compile(REGEX_HTML)
-    stripped = html_regex.sub('', str)
+    stripped = html_regex.sub('', text)
     return stripped
 
 
@@ -185,11 +188,10 @@ class HibpAPI:
         resp = self.query_api("breachedaccount/" + email)
         if resp.status_code == 200:
             breached = True
-            # TODO display red text
-            print("\nBad news - you've been pwned!")
+            print(CLR_LIGHTRED + "\nBad news - you've been pwned!")
             print("The password used with this account for any " +
                   "of the following services\n" +
-                  "should be changed everywhere that it was used.")
+                  "should be changed everywhere that it was used." + CLR_END)
             breaches = resp.json()
             # breaches is now a list of dicts
             print("\nEmail address appears in the following " +
@@ -198,13 +200,14 @@ class HibpAPI:
                 print(breach['Name'])
 
         elif resp.status_code == 404:
-            # TODO display green text
-            print("\nGood news! Email address not found in breach data.")
+            print(CLR_LIGHTGREEN +
+                  "\nGood news! Email address not found in breach data." +
+                  CLR_END)
         else:
             print(f"Response code: {resp.status_code}")
             print("Error calling API")
             # TODO
-            print("Should be an exception handling block here") # TODO
+            print("Should be an exception handling block here")  # TODO
 
         return breached
 
@@ -224,15 +227,15 @@ class HibpAPI:
                 break
 
         if count > 0:
-            # TODO display red text
-            print("\nBad news - you've been pwned!")
+            print(CLR_LIGHTRED + "\nBad news - you've been pwned!")
             print(f"Password appeared {count:,} times in the database.")
-            print("This password should never be used again.")
+            print("This password should never be used again." + CLR_END)
         else:
-            # TODO display green text
-            print("\nGood news! Password not found in database.")
+            print(CLR_LIGHTGREEN +
+                  "\nGood news! Password not found in database.")
             print("Remember, this does NOT mean that it is a GOOD password," +
-                  "\njust that it hasn't yet appeared in an online dump.")
+                  "\njust that it hasn't yet appeared in an online dump." +
+                  CLR_END)
 
         return
 
@@ -279,7 +282,7 @@ class HibpAPI:
 
             elif resp.status_code == 404:
                 print(f"\nBreach name {name} not found.")
-        
+                
             if get_yesno("Search for another breach?"):
                 name = ''
                 continue
@@ -304,11 +307,11 @@ class HibpAPI:
             if k in dont_display:
                 continue
             elif k == 'PwnCount':
-                print(f"Number of Compromised Accounts: {v:,}")
+                print(f"Number of Compromised Accounts: {CLR_LIGHTRED}{v:,}{CLR_END}")
             elif k == 'Description':
-                print(f"{k:12}:\n{strip_html(v)}")
+                print(f"{k:12}:\n{CLR_LIGHTGREEN}{strip_html(v)}{CLR_END}")
             elif k == 'DataClasses':
-                print(f"Type of Data Compromised:\n    {v}")
+                print(f"Type of Data Compromised:\n{CLR_LIGHTRED}{v}{CLR_END}")
             else:
                 print(f"{k:12}: {v}")
 
