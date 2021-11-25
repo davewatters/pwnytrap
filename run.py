@@ -22,6 +22,8 @@ import re
 import requests
 import textwrap
 
+from pprint import pprint
+
 
 APP_VERSION = 'PwnyTrap v1.0'
 CREDS_FILE = 'creds.json'
@@ -30,9 +32,10 @@ HIBP_PWD_API_URL = 'https://api.pwnedpasswords.com/range/'
 USER_AGENT = {"user-agent": "PwnyTrap"}
 
 
-# This regex includes an apostrophe before the @ symbol - 
+# Email regex includes an apostrophe before the @ symbol -
 # they are used in Irish email addresses (common surnames)
 REGEX_EMAIL = r"^[a-zA-Z0-9._%'+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+REGEX_HTML = r"<[^<]+?>"
 
 
 # TODO Implement text colours
@@ -86,6 +89,16 @@ def get_yesno(question='', def_opt=True):
             continue
 
     return reply
+
+
+def strip_html(str):
+    '''
+    Strip HTML markup tags from passed in string.
+    Returns stripped text string.
+    '''
+    html_regex = re.compile(REGEX_HTML)
+    stripped = html_regex.sub('', str)
+    return stripped
 
 
 def disp_main_page():
@@ -190,7 +203,8 @@ class HibpAPI:
         else:
             print(f"Response code: {resp.status_code}")
             print("Error calling API")
-            print("Should be an exception handling block here")
+            # TODO
+            print("Should be an exception handling block here") # TODO
 
         return breached
 
@@ -245,6 +259,58 @@ class HibpAPI:
         while True:
             if get_yesno("Return to main menu?", False):
                 break
+        return
+
+    def breach_details(self, name=''):
+        '''
+        Retrieve & display details record of a particular breach.
+        Accepts the breach name to search for, defaults to empty str.
+        If no breach passed in, prompts the user to enter one.
+        '''
+        while True:
+            if name == '':
+                # ask the user to enter a search term
+                name = input("\nEnter breach name: ").strip().replace(' ', '')
+
+            resp = self.query_api("breach/" + name)
+            if resp.status_code == 200:
+                breach = resp.json()
+                self.disp_breach_details(breach)
+
+            elif resp.status_code == 404:
+                print(f"\nBreach name {name} not found.")
+        
+            if get_yesno("Search for another breach?"):
+                name = ''
+                continue
+            else:
+                break
+        return
+
+    def disp_breach_details(self, breach):
+        '''
+        Displays the breach details on screen. Accepts breach dictionary.
+        Iterates dict, formatting or skipping certain vaules.
+        '''
+        dont_display = [
+            'AddedDate',
+            'IsRetired',
+            'IsSensitive',
+            'LogoPath',
+            'ModifiedDate'
+        ]
+        print('')
+        for k, v in breach.items():
+            if k in dont_display:
+                continue
+            elif k == 'PwnCount':
+                print(f"Number of Compromised Accounts: {v:,}")
+            elif k == 'Description':
+                print(f"{k:12}:\n{strip_html(v)}")
+            elif k == 'DataClasses':
+                print(f"Type of Data Compromised:\n    {v}")
+            else:
+                print(f"{k:12}: {v}")
 
         return
 
@@ -291,7 +357,8 @@ def check_password():
 
 def main():
     '''
-    Main program loop
+    Main program loop.
+    Displays the main screen and menu control loop.
     '''
     disp_main_page()
     while True:
@@ -309,6 +376,8 @@ def main():
             check_password()
         elif opt == '2':
             check_email()
+        elif opt == '3':
+            HibpAPI().breach_details()
         elif opt == '4':
             HibpAPI().show_all_breaches()
 
