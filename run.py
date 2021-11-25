@@ -15,23 +15,23 @@
 #
 # Python3, HIBP API v3
 ##
-import textwrap
-import json
-import hashlib
-import requests
 import getpass
+import hashlib
+import json
 import re
+import requests
+import textwrap
 
 
 APP_VERSION = 'PwnyTrap v1.0'
 CREDS_FILE = 'creds.json'
-HIBP_PWD_API_URL = 'https://api.pwnedpasswords.com/range/'
 HIBP_API_URL = 'https://haveibeenpwned.com/api/v3/'
+HIBP_PWD_API_URL = 'https://api.pwnedpasswords.com/range/'
 USER_AGENT = {"user-agent": "PwnyTrap"}
 
 
-# This regex includes an apostrophe before the @
-# as they are used in Irish email addresses
+# This regex includes an apostrophe before the @ symbol - 
+# they are used in Irish email addresses (common surnames)
 REGEX_EMAIL = r"^[a-zA-Z0-9._%'+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
 
@@ -48,10 +48,11 @@ def cls():
     return
 
 
-def get_yesno(question="Yes or No?", def_opt=True):
+def get_yesno(question='', def_opt=True):
     '''
     Gets user's response to a Yes or No question.
-    Defaults to True for Yes if Enter key hit.
+    Optional parameter Defaults to True for Yes if Enter key hit.
+    Returns True|False if Yes|No is chosen
     '''
     if def_opt is None:
         option = ' [y/n] '
@@ -96,10 +97,11 @@ def disp_main_page():
         {APP_VERSION}\n
         -= Catch bad pa$$words using the Have I Been Pwned API =-\n\n
         App Mode Options:\n
-        1. Show Help screen\n
-        2. Check password\n
-        3. Check email address\n
-        4. Lookup breach info\n
+        0. Show Help screen\n
+        1. Check password\n
+        2. Check email address\n
+        3. Lookup breach details\n
+        4. Show all breaches\n
     """
     print(textwrap.dedent(s))
     return
@@ -135,6 +137,7 @@ class HibpAPI:
     Class to process data from the HIBP API
     API Services available are: breachedaccount, breaches, breach,
         dataclass, pasteaccount
+    API Services implemented: breachedaccount, breaches, breach
     '''
     def __init__(self):
         self.api_url = HIBP_API_URL
@@ -180,6 +183,7 @@ class HibpAPI:
                   f"{len(breaches)} data breaches..")
             for breach in breaches:
                 print(breach['Name'])
+
         elif resp.status_code == 404:
             # TODO display green text
             print("\nGood news! Email address not found in breach data.")
@@ -187,6 +191,7 @@ class HibpAPI:
             print(f"Response code: {resp.status_code}")
             print("Error calling API")
             print("Should be an exception handling block here")
+
         return breached
 
     def check_passwd(self, password):
@@ -198,6 +203,7 @@ class HibpAPI:
         matches = resp.text.splitlines()
         count = 0
         for s in matches:
+            # s contains '<--35 char hash suffix-->:<count>'
             h, c = s.split(':')
             if search_hash + h == passwd_hash.upper():
                 count = int(c)
@@ -221,13 +227,26 @@ class HibpAPI:
         Show the full list of breaches currently in the HIBP dump
         '''
         resp = self.query_api("breaches")
-        breaches = resp.json()
+        breaches = resp.json()  # returns a list of dicts
+        col = 0
         for breach in breaches:
-            print(f"{breach['Name'].strip():<40}", end='')
+            # for each outer loop I'd like three columns
+            if col < 3:
+                print(f"{breach['Name'].strip():<26}", end='')
+                col += 1
+            else:
+                print("")
+                col = 0
 
-        get_yesno()
+        print(f"\nThere are {len(breaches)} breaches listed.")
+        print("\nYou can use the breach name as it appears in this list\n" +
+              "with the Lookup Breach Details menu option.")
+
+        while True:
+            if get_yesno("Return to main menu?", False):
+                break
+
         return
-
 
 
 def check_email():
@@ -276,22 +295,23 @@ def main():
     '''
     disp_main_page()
     while True:
-        opt = input("Enter your choice [1-4, or q to quit]: ")
-        if (len(opt) != 1) or (opt not in "1234q"):
+        opt = input("Enter your choice [0-4, or q to quit]: ")
+        if (len(opt) != 1) or (opt not in "01234q"):
             print(f"\n{opt} is not a valid option. Valid options " +
-                  "are 1, 2, 3, 4 or q.\nPlease try again.\n")
+                  "are 0, 1, 2, 3, 4 or q.\nPlease try again.\n")
             continue
         elif opt == 'q':
             print('Goodbye.')
             break
-        elif opt == '1':
+        elif opt == '0':
             help_screen()
-        elif opt == '2':
+        elif opt == '1':
             check_password()
-        elif opt == '3':
+        elif opt == '2':
             check_email()
         elif opt == '4':
             HibpAPI().show_all_breaches()
+
         disp_main_page()
 
 
