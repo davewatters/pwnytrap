@@ -23,6 +23,7 @@ import re
 import requests
 import textwrap
 
+from requests.models import HTTPError
 
 
 APP_VERSION = 'PwnyTrap v1.0'
@@ -52,7 +53,6 @@ def cls():
     Similar to 'nix terminal clear or Win command cls
     '''
     print("\033[H\033[J", end="")
-    print('123456789+' * 8)  # 123456789+123456789+
     return
 
 
@@ -122,7 +122,7 @@ class HibpAPI:
 
     def init_api_key(self):
         '''
-        Load API key from creds file
+        Load API key from creds file.
         '''
         print("\nChecking credentials file...\n")
         try:
@@ -150,7 +150,8 @@ class HibpAPI:
         '''
         url = self.api_url + service_param
         headers = {**self.api_key, **self.user_agent}
-        return requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers)
+        return response
 
     def check_breached(self, email):
         '''
@@ -159,29 +160,39 @@ class HibpAPI:
         Returns True|False if email is found in database.
         '''
         breached = False
-        resp = self.query_api("breachedaccount/" + email)
-        if resp.status_code == 200:
-            breached = True
-            print(CLR_LIGHTRED + "\nBad news - you've been pwned!")
-            print("The password used with this account for any " +
-                  "of the following services\n" +
-                  "should be changed everywhere that it was used." + CLR_END)
-            breaches = resp.json()
-            # breaches is now a list of dicts
-            print("\nEmail address appears in the following " +
-                  f"{len(breaches)} data breaches..")
-            for breach in breaches:
-                print(breach['Name'])
-
-        elif resp.status_code == 404:
-            print(CLR_LIGHTGREEN +
-                  "\nGood news! Email address not found in breach data." +
-                  CLR_END)
+        try:
+            resp = self.query_api("breachedaccount/" + email)
+        except ConnectionError as e:
+            print("Network error attempting connection to...")
+            print(f"{self.api_url}")
+            print(f"{e}")
         else:
-            print(f"Response code: {resp.status_code}")
-            print("Error calling API")
-            # TODO
-            print("Should be an exception handling block here")  # TODO
+            if resp.status_code == 200:
+                breached = True
+                print(CLR_LIGHTRED + "\nBad news - you've been pwned!")
+                print("The password used with this account for any " +
+                      "of the following services\n" +
+                      "should be changed everywhere that it was used." +
+                      CLR_END)
+                breaches = resp.json()
+                # breaches is now a list of dicts
+                print("\nEmail address appears in the following " +
+                      f"{len(breaches)} data breaches..")
+                for breach in breaches:
+                    print(breach['Name'])
+
+            elif resp.status_code == 404:
+                print(CLR_LIGHTGREEN +
+                      "\nGood news! Email address not found in breach data." +
+                      CLR_END)
+
+            elif resp.status_code == 401:
+                print("\nError calling API...")
+                print("HTTP Response code: " +
+                      "401 Unauthorised - API Key invalid or expired")
+            else:
+                print("\nError calling API...")
+                print(f"HTTP Response code: {resp.status_code}")
 
         return breached
 
@@ -190,26 +201,35 @@ class HibpAPI:
         print('\nPassword encrypted...')
         print(f'SHA-1 hash digest of password: {passwd_hash}')
         search_hash = passwd_hash[:5].upper()
-        resp = requests.get(HIBP_PWD_API_URL + search_hash)
-        matches = resp.text.splitlines()
-        count = 0
-        for s in matches:
-            # s contains '<--35 char hash suffix-->:<count>'
-            h, c = s.split(':')
-            if search_hash + h == passwd_hash.upper():
-                count = int(c)
-                break
-
-        if count > 0:
-            print(CLR_LIGHTRED + "\nBad news - you've been pwned!")
-            print(f"Password appeared {count:,} times in the database.")
-            print("This password should never be used again." + CLR_END)
+        try:
+            resp = requests.get(HIBP_PWD_API_URL + search_hash)
+            if resp.status_code != 200:
+                raise HTTPError
+        except HTTPError:
+            print("\nError while attempting connection to...")
+            print(f"{resp.url}")
+            print(f"HTTP Response code: {resp.status_code}")
         else:
-            print(CLR_LIGHTGREEN +
-                  "\nGood news! Password not found in database.")
-            print("Remember, this does NOT mean that it is a GOOD password," +
-                  "\njust that it hasn't yet appeared in an online dump." +
-                  CLR_END)
+            matches = resp.text.splitlines()
+            count = 0
+            for s in matches:
+                # s contains '<--35 char hash suffix-->:<count>'
+                h, c = s.split(':')
+                if search_hash + h == passwd_hash.upper():
+                    count = int(c)
+                    break
+
+            if count > 0:
+                print(CLR_LIGHTRED + "\nBad news - you've been pwned!")
+                print(f"Password appeared {count:,} times in the database.")
+                print("This password should never be used again." + CLR_END)
+            else:
+                print(CLR_LIGHTGREEN +
+                      "\nGood news! Password not found in database.")
+                print("Remember, this does NOT mean that it is a GOOD " +
+                      "password,\n just that it " +
+                      "hasn't yet appeared in an online dump." +
+                      CLR_END)
 
         return
 
@@ -256,7 +276,7 @@ class HibpAPI:
 
             elif resp.status_code == 404:
                 print(f"\nBreach name {name} not found.")
-                
+
             if get_yesno("Search for another breach?"):
                 name = ''
                 continue
@@ -281,7 +301,8 @@ class HibpAPI:
             if k in dont_display:
                 continue
             elif k == 'PwnCount':
-                print(f"Number of Compromised Accounts: {CLR_LIGHTRED}{v:,}{CLR_END}")
+                print(f"Number of Compromised Accounts: {CLR_LIGHTRED}{v:,}" +
+                      CLR_END)
             elif k == 'Description':
                 print(f"{k:12}:\n{CLR_LIGHTGREEN}{strip_html(v)}{CLR_END}")
             elif k == 'DataClasses':
@@ -298,7 +319,6 @@ def check_email(hibp):
     Checks email for inclusion in HIBP breached accounts database
     '''
     print('\nChecking email address...')
-    # hibp = HibpAPI()
     email_regex = re.compile(REGEX_EMAIL)
     while True:
         email = input("\nEnter email account to check: ")
@@ -356,6 +376,7 @@ def help_screen():
     print(textwrap.dedent(s))
     input("Enter to return to the main screen...")
     return
+
 
 def disp_app_info():
     '''
