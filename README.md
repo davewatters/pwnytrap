@@ -1,6 +1,6 @@
 # PwnyTrap
 
-### A Python tool to let you check whether a password or an email address has been compromised and is in the [HaveIBeenPwned.com](https://haveibeenpwned.com) breach database.
+### A Python tool to query the https://haveibeenpwned.com API to see if a given password or email address has been compromised in a data breach.
 <br />
 
 You can view the PwnyTrap live app [HERE.](https://ci-pp3-pwnytrap.herokuapp.com/)
@@ -66,6 +66,10 @@ It's important to note that the entered password is never sent over the network 
 - #_TODO  
     Password privacy using the [k-anonymity model](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity)
 
+- Check Password
+- Check Email Address
+- Lookup Beah Info
+- List All Breaches in the HIBP database
 
 ## - Future Features -
 - #_TODO
@@ -90,6 +94,8 @@ It's important to note that the entered password is never sent over the network 
     - GitHub is used to store the project's code after being pushed from Git, and Github Pages used to deploy the live site
 1. [Heroku](https://heroku.com)
     - Heroku was used to deploy the app using a Code Institute template
+    1. [LucidChart](https://lucidchart.com) was used to create the logic flowchart
+
 <!---  --->
 <!---  Begin testing section --->
 <!---  --->
@@ -98,7 +104,9 @@ It's important to note that the entered password is never sent over the network 
 
 
 ### Code Validation
--   The [PEP8 Online](http://pep8online.com) was used
+-   The [PEP8 Online](http://pep8online.com) was used to ensure the code adhered to the Python Style Guideines.
+<h2 align="center"><img src=readme-docs/pep8.png></h2>
+
 -   https://pythex.org was used to test regular expressions with various inputs
 -   #_TODO
 
