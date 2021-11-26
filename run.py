@@ -18,9 +18,11 @@
 import getpass
 import hashlib
 import json
+from json.decoder import JSONDecodeError
 import re
 import requests
 import textwrap
+
 
 
 APP_VERSION = 'PwnyTrap v1.0'
@@ -104,50 +106,6 @@ def strip_html(text):
     return stripped
 
 
-def disp_main_page():
-    '''
-    Displays the main greeting and menu options
-    '''
-    cls()
-    s = f"""
-        {APP_VERSION}\n
-        -= Catch bad pa$$words using the Have I Been Pwned API =-\n\n
-        App Mode Options:\n
-        0. Show Help screen\n
-        1. Check password\n
-        2. Check email address\n
-        3. Lookup breach details\n
-        4. Show all breaches\n
-    """
-    print(textwrap.dedent(s))
-    return
-
-
-def help_screen():
-    '''
-    Displays the help information screen
-    '''
-    cls()
-    s = f"""
-        {APP_VERSION} Help\n
-
-        Lots of helpful info goes here.\n
-        TODO explain checking passowrd pwnage
-        TODO explain checking email address pwnage\n
-        TODO Explain the HIBP API\n
-        TODO Include a link to the HIBP site and also it's FAQ page\n
-
-        Finally, in case you were wondering...
-        PwnyTrap is pronounced 'Pony Trap'.  It comes from the
-        leetspeak word 'pwn' meaning to be beaten or compromised
-        in some way. For an explanation check this link:
-        https://en.wikipedia.org/wiki/PWN\n
-    """
-    print(textwrap.dedent(s))
-    input("Enter to return to the main screen..")
-    return
-
-
 class HibpAPI:
     '''
     Class to process data from the HIBP API
@@ -159,14 +117,30 @@ class HibpAPI:
         self.api_url = HIBP_API_URL
         self.pwd_api_url = HIBP_PWD_API_URL
         self.user_agent = USER_AGENT
+        self.creds_file_ok = False
+        self.api_key = ''
 
-        # 
-        # MOve to get_api_key method with
-        # try/except error checking for
-        # missing creds file, invalid key, expired key
-        # 
-        with open(CREDS_FILE) as f:
-            self.api_key = json.load(f)
+    def init_api_key(self):
+        '''
+        Load API key from creds file
+        '''
+        print("\nChecking credentials file...\n")
+        try:
+            with open(CREDS_FILE, 'r') as f:
+                self.api_key = json.load(f)
+        except OSError as e:
+            errno, strerr = e.args
+            print(f"Error accessing {CREDS_FILE}. I/O Error {errno}: {strerr}")
+            print("API Key not set.")
+        except JSONDecodeError as e:
+            print(f"Error reading {CREDS_FILE}...")
+            print(f"{e}")
+            print("API Key not set.")
+        else:
+            print("\nCredentials file read OK...")
+            self.creds_file_ok = True
+
+        return
 
     def query_api(self, service_param):
         '''
@@ -213,7 +187,7 @@ class HibpAPI:
 
     def check_passwd(self, password):
         passwd_hash = hashlib.sha1(password.encode('utf-8')).hexdigest()
-        print('\nPassword encrypted')
+        print('\nPassword encrypted...')
         print(f'SHA-1 hash digest of password: {passwd_hash}')
         search_hash = passwd_hash[:5].upper()
         resp = requests.get(HIBP_PWD_API_URL + search_hash)
@@ -318,13 +292,13 @@ class HibpAPI:
         return
 
 
-def check_email():
+def check_email(hibp):
     '''
     Accepts user input for email account to check
     Checks email for inclusion in HIBP breached accounts database
     '''
     print('\nChecking email address...')
-    hibp = HibpAPI()
+    # hibp = HibpAPI()
     email_regex = re.compile(REGEX_EMAIL)
     while True:
         email = input("\nEnter email account to check: ")
@@ -347,7 +321,7 @@ def check_password():
     '''
     while True:
         print('\nChecking password...\n')
-        print("* Only partial SHA-1 hash of password will be used")
+        print("* Only partial SHA-1 hash of password will be sent to API")
         print("* Password will not be logged or sent over the internet\n")
         passwd = getpass.getpass('Enter password to check: ')
 
@@ -358,11 +332,71 @@ def check_password():
     return
 
 
+def help_screen():
+    '''
+    Displays the help information screen
+    '''
+    cls()
+    disp_app_info()
+    s = """
+        Help & Information\n
+
+        Lots of helpful info goes here.\n
+        TODO explain checking passowrd pwnage
+        TODO explain checking email address pwnage\n
+        TODO Explain the HIBP API\n
+        TODO Include a link to the HIBP site and also it's FAQ page\n
+
+        Finally, in case you were wondering...
+        PwnyTrap is pronounced 'Pony Trap'.  It comes from the
+        leetspeak word 'pwn' meaning to be beaten or compromised
+        in some way. For an explanation check this link:
+        https://en.wikipedia.org/wiki/PWN\n
+    """
+    print(textwrap.dedent(s))
+    input("Enter to return to the main screen...")
+    return
+
+def disp_app_info():
+    '''
+    Displays the app name, version and basic info
+    '''
+    print(f"{APP_VERSION}")
+    return
+
+
+def disp_main_page():
+    '''
+    Displays the main greeting and menu options
+    '''
+    cls()
+    disp_app_info()
+    s = """
+        -= Catch bad pa$$words using the Have I Been Pwned API =-\n\n
+        App Mode Options:\n
+        0. Show Help screen\n
+        1. Check password\n
+        2. Check email address\n
+        3. Lookup breach details\n
+        4. Show all breaches\n
+    """
+    print(textwrap.dedent(s))
+    return
+
+
 def main():
     '''
     Main program loop.
     Displays the main screen and menu control loop.
     '''
+    disp_app_info()
+    hibp = HibpAPI()
+    hibp.init_api_key()
+    if not hibp.creds_file_ok:
+        print("Program can't continue without valid credentials file.")
+        print("Goodbye.")
+        exit(1)
+
     disp_main_page()
     while True:
         opt = input("Enter your choice [0-4, or q to quit]: ")
@@ -378,11 +412,11 @@ def main():
         elif opt == '1':
             check_password()
         elif opt == '2':
-            check_email()
+            check_email(hibp)
         elif opt == '3':
-            HibpAPI().breach_details()
+            hibp.breach_details()
         elif opt == '4':
-            HibpAPI().show_all_breaches()
+            hibp.show_all_breaches()
 
         disp_main_page()
 
