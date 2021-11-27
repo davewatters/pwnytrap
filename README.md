@@ -19,54 +19,51 @@ You can view the PwnyTrap live app [HERE.](https://ci-pp3-pwnytrap.herokuapp.com
 * [Credits](#credits)
 
 ## - Purpose -
-[ This app was created as the third Portfolio Project (PP3) for the Code Institute's Full Stack Web Development course. As a requirement for a portfolio project the app is to showcase Python skills and is deployed in the Code Institute mock terminal on Heroku.]  
+[ This app was created as the third Portfolio Project (PP3) for the Code Institute's Full Stack Web Development course. The app is to showcase Python skills, and as a requirement is deployed to Heroku using a Code Institute mock terminal template.]  
 
 In short:  
 A Python tool to query the HaveIBeenPwned API to see if a given password or email address was compromised in a data breach.
 
 In more detail:   
-PwnyTrap's purpose is to query the HaveIBeenPwned API to see if a given password or email address was compromised in a data breach.  If a password is present then that password must never be used again as it much more likely to be susceptible to a [credential stuffing](https://owasp.org/www-community/attacks/Credential_stuffing) attack.  Similarly, if an email account is identified in a particular breach, then its accompanying password must be changed and never used again for any service.
+PwnyTrap's purpose on one level is to be a simple tool to easily enable password & email address lookups to the HIBP database.  On another level, it was created as an idea for a Python module which could be imported for use in future projects to enhance IT security.  
 
-The primary audience for this tool would appear to be the IT professional, but it is in fact for *all* online users, as its ultimate purpose is to educate and raise awareness about taking the security of our online identity seriously.  For SysAdmins & Tech Support there is an obvious and immediate benefit to having a quick command-line tool to check if an email address or password has been compromised.  
+PwnyTrap's primary audience is the IT professional, but it is in fact relevant to online users and can be easily used by anyone without them having concern for the underlying API or code.  
 
-Additionally, for software developers there is a need to encourage awareness around designing software with security in mind.  This app could be integrated into a website registration form to inform the user of a previous breach at point of entry so that a better decision can be made when choosing a password.  
+I hope this app sparks conversation amongst software developers around the concept of incorporating a HibpAPI class, or similar implementation, into an app's login or registration handling code.
 
-As internet users, people are creatures of habit and for convenience will often reuse the same password across multiple sites.  If a trusted IT service professional shows the user their results from the HIBP search it can encourage them to rethink how they approach their online security.  
-
-It's important to note that the entered password is never sent over the network or logged by the program.
 
 ## - User Experience Design -
 
 -   ### Design
     -   #### Layout
-        The program is designed as a command-line app and to run in the Code Institute project terminal on Heroku.  The default maximum terminal screen width is 80 characters and default height is 24 characters. The terminal window automatically scrolls up.   
+        The program is designed as a command-line app and to run in the Code Institute project terminal on Heroku.  The default maximum terminal screen width is 80 characters and default height is 24 characters. The terminal window automatically scrolls up. The user interface design is a simple menu-driven text application with keyboard input only. (Note: Code Institute supply the web site wrapper template for Heroku deployment.) 
     -   #### Content
-        The user is presented with a main screen displaying the menu options available. They can enter a number to open that menu option.  The Help/Info screen option presents its own screen of text content.  All other content is generated dynamically based on either the user's input or relevant system messages, and the screen will scroll up to display it.
+        The user is presented with a main screen displaying the menu options available. They can enter a number to open that menu option.  The Help/Info screen option presents its own screen of text content.  All other content is generated dynamically based on either the user's input or relevant system messages and the screen will scroll up to display it.
     -   #### User Input
         Depending on the option chosen, the user inputs a value and hits the Enter key to submit to the API search. If the data entered is invalid the user is informed and asked to re-enter it. For all options the system awaits a Yes/No response - this ensures that the user has time to read the information. The input is designed to make the user's workflow easier by defaulting to either Y or N in the most likely situation. This allows the user to repeat the option by just hitting Enter, e.g. 'Check another? [Y/n]' - hitting enter here accepts the default answer 'Y(es)'.  Overall, the user can accomplish tasks with minimal input.  
 
 
 ## - Features -
-<h2 align="center"><img src="readme-docs/.png"></h2>
-<h2 align="center"><img src="readme-docs/.png"></h2>
-- #_TODO  
 
-- Check Password  
+### Check Password  
 Password privacy using the [k-anonymity model](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity)
+<h2 align="center"><img src="readme-docs/lookup-password.png"></h2>
 
-- Check Email Address
+### Check Email Address
 <h2 align="center"><img src="readme-docs/lookup-email-notfound.png"></h2>
 <h2 align="center"><img src="readme-docs/lookup-email-pwned.png"></h2>
 <h2 align="center"><img src="readme-docs/lookup-email-invalid-address.png"></h2>
 
-- Lookup Breach Info
-- List All Breaches in the HIBP database
+### Lookup Breach Info
+<h2 align="center"><img src="readme-docs/lookup-breach.png"></h2>
+### List All Breaches in the HIBP database
+<h2 align="center"><img src="readme-docs/.png"></h2>
 
 ## - Future Features -
-- #_TODO
--   Refactor the HibpAPI 
--   Check Active Directory accounts passowrds using the offline NTLM hash download
--   Scan a company's whole domain email accounts exposure in a breach 
+### #_TODO
+###  Refactor the HibpAPI 
+###   Check Active Directory accounts passowrds using the offline NTLM hash download
+###   Scan a company's whole domain email accounts exposure in a breach 
 <!--  -->
 <!-- End Features -->
 <!--  -->
@@ -94,7 +91,7 @@ Password privacy using the [k-anonymity model](https://www.troyhunt.com/ive-just
 <h2 align="center"><img src="readme-docs/.png"></h2>
 <h2 align="center"><img src="readme-docs/.png"></h2>
 
-On program start I tested that the credentials file exists and is contains a readabe API key.  The first error shows if the file can't be found and the second if its contents are not valid, e.g. I removed the colon delimiter from the JSON api key data. In either either case the program can't continue, clearly informs teh user, and gracefully exits. 
+On program start I tested that the credentials file exists and contains a readabe API key.  The first error shows if the file can't be found and the second if its contents are not valid, e.g. I removed the colon delimiter from the JSON api key data. In either either case the program can't continue, clearly informs the user, and gracefully exits. 
 <h2 align="center"><img src="readme-docs/test-creds-file-not-found-err.png"></h2>
 <h2 align="center"><img src="readme-docs/test-creds-json-decode-err.png"></h2>
 
@@ -122,7 +119,7 @@ I tested for and invalid API key.
 ### Heroku  
 The live deployed site can be viewed on Heroku [HERE](https://ci-pp3-pwnytrap.herokuapp.com)
 
-The Project repository (repo) is at [https://github.com/davewatters/pwnytrap](https://github.com/davewatters/pwnytrap)
+The Project repository (repo) is at [https://github.com/davewatters/pwnytrap](https://github.com/davewatters/pwnytrap-ci-pp3)
 
 Note: The project repo was initially generated from the [Code Institute Python Essentials template](https://github.com/Code-Institute-Org/python-essentials-template) 
 
