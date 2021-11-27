@@ -6,8 +6,8 @@
 You can view the PwnyTrap live app [HERE.](https://ci-pp3-pwnytrap.herokuapp.com/)
 <br />
 <br />
-#_TODO Screen sample image goes here
-<h2 align="center"><img src="readme-docs/pwnytrap-ci-pp3-main-screen.png"></h2>
+
+<h2 align="center"><img src="readme-docs/pwnytrap-v1.0-main-screen.png"></h2>
 
 ## - Table of Contents -
 * [Purpose](#purpose)
