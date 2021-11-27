@@ -139,6 +139,7 @@ class HibpAPI:
             print(f"{e}")
             print("API Key not set.")
         except Exception as e:
+            # Something else unknown went wrong..
             print(f"Error occurred processing {CREDS_FILE}...")
             print(f"{e}")
         else:
@@ -170,6 +171,9 @@ class HibpAPI:
         except ConnectionError as e:
             print("Network error attempting connection to...")
             print(f"{self.api_url}")
+            print(f"{e}")
+        except Exception as e:
+            print("Error occurred checking for breached account...")
             print(f"{e}")
         else:
             if resp.status_code == 200:
@@ -214,6 +218,9 @@ class HibpAPI:
             print("\nError while attempting connection to...")
             print(f"{resp.url}")
             print(f"HTTP Response code: {resp.status_code}")
+        except Exception as e:
+            print("Error occurred checking for compromised password...")
+            print(f"{e}")
         else:
             matches = resp.text.splitlines()
             count = 0
