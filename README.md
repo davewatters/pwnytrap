@@ -27,7 +27,7 @@ A Python tool to query the HaveIBeenPwned API to see if a given password or emai
 In more detail:   
 PwnyTrap's purpose on one level is to be a simple tool to easily enable password & email address lookups to the HIBP database.  On another level, it was created as an idea for a Python module which could be imported for use in future projects to enhance IT security.  
 
-PwnyTrap's primary audience is the IT professional, but it is in fact relevant to online users and can be easily used by anyone without them having concern for the underlying API or code.  
+PwnyTrap's primary audience is the IT professional, but it is in fact relevant to all online users and can be easily used by anyone without them having concern for the underlying API or code.  
 
 I hope this app sparks conversation amongst software developers around the concept of incorporating a HibpAPI class, or similar implementation, into an app's login or registration handling code.
 
@@ -43,27 +43,28 @@ I hope this app sparks conversation amongst software developers around the conce
         Depending on the option chosen, the user inputs a value and hits the Enter key to submit to the API search. If the data entered is invalid the user is informed and asked to re-enter it. For all options the system awaits a Yes/No response - this ensures that the user has time to read the information. The input is designed to make the user's workflow easier by defaulting to either Y or N in the most likely situation. This allows the user to repeat the option by just hitting Enter, e.g. 'Check another? [Y/n]' - hitting enter here accepts the default answer 'Y(es)'.  Overall, the user can accomplish tasks with minimal input.  
 
 
-## - Features -
-
-### Check Password  
-Password privacy using the [k-anonymity model](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity)
+## - Features -  
+- **Check Password** allows the user to type in a password. For confidentiality, the letters typed are not shown on screeen. Internally the password is encrypted using the SHA-1 hashing algorithm and only the first five characters are used to build the search query for the API. The response will indicate whether the password was compromised and how many times it appears in the database. The message is dsplayed in red if it was matched and green if it wasn't.  
+(You can read more about implementing password privacy using the k-anonymity model [here](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity).)
 <h2 align="center"><img src="readme-docs/lookup-password.png"></h2>
 
-### Check Email Address
-<h2 align="center"><img src="readme-docs/lookup-email-notfound.png"></h2>
+- **Check Email Address** allows the user to type in an email address. The input is checked to ensure that a correctly formatted email address was entered (_not_ that it is a _live_ email account) and if so the database is searched and a relevant message displayed.
 <h2 align="center"><img src="readme-docs/lookup-email-pwned.png"></h2>
+<h2 align="center"><img src="readme-docs/lookup-email-notfound.png"></h2>
 <h2 align="center"><img src="readme-docs/lookup-email-invalid-address.png"></h2>
 
-### Lookup Breach Info
-<h2 align="center"><img src="readme-docs/lookup-breach.png"></h2>
-### List All Breaches in the HIBP database
-<h2 align="center"><img src="readme-docs/.png"></h2>
+- **Lookup Breach Info** allows the user to enter a breach name 
+<h2 align="center"><img src="readme-docs/lookup-breach.png"></h2>  
+
+- **List All Breaches in the HIBP database** returns all 500+ breach names displayed in three columns. User can scroll through the list. Enter Y or y to return to the menu.
+<h2 align="center"><img src="readme-docs/.png"></h2>  
+
+- **API Key** This app requires a valid [HaveIBeenPwned.com] API Key and when first run the program checks for its presence in a file called creds.json is the same folder as run.py
 
 ## - Future Features -
-### #_TODO
-###  Refactor the HibpAPI 
-###   Check Active Directory accounts passowrds using the offline NTLM hash download
-###   Scan a company's whole domain email accounts exposure in a breach 
+-   Refactor the HibpAPI class to search on NTLM hashes (aka NTHash) of the given password.  Could create an option or separate Active Directory test tool using HIBP's offline NTLM hash dump.
+-   Create an option (or separate tool) to scan a company's whole email domain for accounts exposed in a breach
+-   Any idea that helps the IT security team identify vulnerabilites or encourages better end user security practises  
 <!--  -->
 <!-- End Features -->
 <!--  -->
@@ -106,10 +107,11 @@ I tested for and invalid API key.
 -   https://pythex.org was used to test regular expressions with various inputs
 -   #_TODO
 
-### Bugs
+### Bugs  
 
-1. #_TODO
-
+1. In the `check_password()` function, initially when using `hashlib.sha1()` to encrypt the password, I made the mistake of not encoding the password using `password.encode('utf-8')`. **Fixed.**
+2. Initially tried to use `resp.text` to parse the results of the breach search before realising it should have been `resp.json()` which correctly parses to a list of dictionaries for further processing. **Fixed.** 
+3. Regex used to validate email addresses incorrectly rejected email addresses containing an apostrope. **Fixed.** 
 <!---  --->
 <!--- end of testing section --->
 <!---  --->

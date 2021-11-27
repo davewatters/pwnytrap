@@ -383,7 +383,7 @@ def help_screen():
         2 - Search the HIBP database for an email address.
             A positive result will show the number and names of the breaches.
 
-        3 - Search for detailed info by breach name
+        3 - Search for detailed info by breach name.
 
         4 - Shows a list of all of the breaches in the database
 
