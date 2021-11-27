@@ -6,10 +6,8 @@
 You can view the PwnyTrap live app [HERE.](https://ci-pp3-pwnytrap.herokuapp.com/)
 <br />
 <br />
-<!-- Responsive desgin sample image from http://ami.responsivedesign.is/ -->
 #_TODO Screen sample image goes here
-<!-- <h2 align="center"><img src="readme-docs/ci-pp2-blackjack-responsive-mockup.png"></h2>
--->
+<h2 align="center"><img src="readme-docs/pwnytrap-ci-pp3-main-screen.png"></h2>
 
 ## - Table of Contents -
 * [Purpose](#purpose)
@@ -39,40 +37,34 @@ It's important to note that the entered password is never sent over the network 
 
 ## - User Experience Design -
 
--   ### User stories
-
-    -   ### Design Strategy Goals
-        -    #_TODO
-
-    -   ### Design Scope to Deliver MVP
-        -   #### First Time Visitor Goals
-            As a first time user...
-            -  #_TODO
-
-        -   #### Returning Visitor Goals
-            As a returning visitor...
-            -   #_TODO
-
-        -   #### Frequent User Goals
-            As a frequent user...
-            -   #_TODO
-
-
 -   ### Design
     -   #### Layout
-        The program is designed as a command-line app and to run in the Code Institute project terminal on Heroku.  The default maximum terminal screen width is 80 characters and default height is 24 characters. The terminal window will automatically scroll up.   
+        The program is designed as a command-line app and to run in the Code Institute project terminal on Heroku.  The default maximum terminal screen width is 80 characters and default height is 24 characters. The terminal window automatically scrolls up.   
+    -   #### Content
+        The user is presented with a main screen displaying the menu options available. They can enter a number to open that menu option.  The Help/Info screen option presents its own screen of text content.  All other content is generated dynamically based on either the user's input or relevant system messages, and the screen will scroll up to display it.
+    -   #### User Input
+        Depending on the option chosen, the user inputs a value and hits the Enter key to submit to the API search. If the data entered is invalid the user is informed and asked to re-enter it. For all options the system awaits a Yes/No response - this ensures that the user has time to read the information. The input is designed to make the user's workflow easier by defaulting to either Y or N in the most likely situation. This allows the user to repeat the option by just hitting Enter, e.g. 'Check another? [Y/n]' - hitting enter here accepts the default answer 'Y(es)'.  Overall, the user can accomplish tasks with minimal input.  
+
 
 ## - Features -
+<h2 align="center"><img src="readme-docs/.png"></h2>
+<h2 align="center"><img src="readme-docs/.png"></h2>
 - #_TODO  
-    Password privacy using the [k-anonymity model](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity)
 
-- Check Password
+- Check Password  
+Password privacy using the [k-anonymity model](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity)
+
 - Check Email Address
-- Lookup Beah Info
+<h2 align="center"><img src="readme-docs/lookup-email-notfound.png"></h2>
+<h2 align="center"><img src="readme-docs/lookup-email-pwned.png"></h2>
+<h2 align="center"><img src="readme-docs/lookup-email-invalid-address.png"></h2>
+
+- Lookup Breach Info
 - List All Breaches in the HIBP database
 
 ## - Future Features -
 - #_TODO
+-   Refactor the HibpAPI 
 -   Check Active Directory accounts passowrds using the offline NTLM hash download
 -   Scan a company's whole domain email accounts exposure in a breach 
 <!--  -->
@@ -84,27 +76,34 @@ It's important to note that the entered password is never sent over the network 
 
 ### Languages Used
 
--   [Python](https://en.wikipedia.org/wiki/Python_(programming_language))
+-   [Python 3](https://en.wikipedia.org/wiki/Python_(programming_language))
 
 ### Frameworks, Libraries & Programs Used
 
-1. [Git](https://git-scm.com/)
-    - Git was used for version control and managed via the VSCode terminal to commit to Git and Push to GitHub.
-1. [GitHub:](https://github.com/)
-    - GitHub is used to store the project's code after being pushed from Git, and Github Pages used to deploy the live site
-1. [Heroku](https://heroku.com)
-    - Heroku was used to deploy the app using a Code Institute template
-    1. [LucidChart](https://lucidchart.com) was used to create the logic flowchart
+1.  [Git](https://git-scm.com/) was used for version control and managed via the VSCode terminal to commit to Git and Push to GitHub.
+1.  [GitHub](https://github.com/) was used to store the project's code after being pushed from Git
+1.  [Flake8](https://flake8.pycqa.org/en/latest/) linter extension for VScode 
+1.  [Heroku](https://www.heroku.com) was used to deploy the app using a Code Institute template
+1.  [LucidChart](https://lucidchart.com) was used to create the logic flowchart
 
 <!---  --->
 <!---  Begin testing section --->
 <!---  --->
 
 ## - Testing -
+<h2 align="center"><img src="readme-docs/.png"></h2>
+<h2 align="center"><img src="readme-docs/.png"></h2>
+
+On program start I tested that the credentials file exists and is contains a readabe API key.  The first error shows if the file can't be found and the second if its contents are not valid, e.g. I removed the colon delimiter from the JSON api key data. In either either case the program can't continue, clearly informs teh user, and gracefully exits. 
+<h2 align="center"><img src="readme-docs/test-creds-file-not-found-err.png"></h2>
+<h2 align="center"><img src="readme-docs/test-creds-json-decode-err.png"></h2>
+
+I tested for and invalid API key.
+<h2 align="center"><img src="readme-docs/test-api-key-invalid-err.png"></h2>
 
 
 ### Code Validation
--   The [PEP8 Online](http://pep8online.com) was used to ensure the code adhered to the Python Style Guidelines.
+-   The [PEP8 Online](http://pep8online.com) linter was used to ensure the code adhered to the Python Style Guidelines.
 <h2 align="center"><img src=readme-docs/pep8.png></h2>
 
 -   https://pythex.org was used to test regular expressions with various inputs

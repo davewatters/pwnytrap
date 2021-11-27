@@ -239,7 +239,7 @@ class HibpAPI:
                 print(CLR_LIGHTGREEN +
                       "\nGood news! Password not found in database.")
                 print("Remember, this does NOT mean that it is a GOOD " +
-                      "password,\n just that it " +
+                      "password,\njust that it " +
                       "hasn't yet appeared in an online dump." +
                       CLR_END)
 
@@ -371,19 +371,28 @@ def help_screen():
     cls()
     disp_app_info()
     s = """
-        Help & Information\n
+        Help & Information
 
-        Lots of helpful info goes here.\n
-        TODO explain checking passowrd pwnage
-        TODO explain checking email address pwnage\n
-        TODO Explain the HIBP API\n
-        TODO Include a link to the HIBP site and also it's FAQ page\n
+        0 - Shows this help screen
 
-        Finally, in case you were wondering...
-        PwnyTrap is pronounced 'Pony Trap'.  It comes from the
-        leetspeak word 'pwn' meaning to be beaten or compromised
-        in some way. For an explanation check this link:
-        https://en.wikipedia.org/wiki/PWN\n
+        1 - Allows you to search the HIBP Compromised Passwords database. The 
+            entered password is not visible, is encrypted, and is not logged
+            anywhere. Ony the first five characters of the SHA-1 hash are sent
+            to the API. (See the HIBP site about use of the k-Anonymity model)
+
+        2 - Search the HIBP database for an email address.
+            A positive result will show the number and names of the breaches.
+
+        3 - Search for detailed info by breach name
+
+        4 - Shows a list of all of the breaches in the database
+
+        For further reading about the API, see the HIBP website FAQ and spec:
+        https://haveibeenpwned.com/FAQs, https://haveibeenpwned.com/API/v3
+
+        Lastly, in case you were wondering.. PwnyTrap is pronounced 'Pony Trap'
+        It comes from the leetspeak word 'pwn' meaning to be beaten or
+        compromised in some way.
     """
     print(textwrap.dedent(s))
     input("Enter to return to the main screen...")
