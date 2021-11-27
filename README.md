@@ -19,13 +19,13 @@ You can view the PwnyTrap live app [HERE.](https://ci-pp3-pwnytrap.herokuapp.com
 * [Credits](#credits)
 
 ## - Purpose -
-[ This app was created as the third Portfolio Project (PP3) for the Code Institute's Full Stack Web Development course. The app is to showcase Python skills, and as a requirement is deployed to Heroku using a Code Institute mock terminal template.]  
+[This app was created as the third Portfolio Project (PP3) for the Code Institute's Full Stack Web Development course. The app is to showcase Python skills, and as a requirement is deployed to Heroku using a Code Institute mock terminal template.]  
 
 In short:  
-A Python tool to query the HaveIBeenPwned API to see if a given password or email address was compromised in a data breach.
+A Python tool to query the HaveIBeenPwned.com API to see if a given password or email address was compromised in a data breach.
 
 In more detail:   
-PwnyTrap's purpose on one level is to be a simple tool to easily enable password & email address lookups to the HIBP database.  On another level, it was created as an idea for a Python module which could be imported for use in future projects to enhance IT security.  
+PwnyTrap's purpose on one level is to be a simple tool to easily enable password & email address lookups to the HaveIBeenPwned.com (aka HIBP) database. On another level, it was created as an idea for a Python module which could be imported for use in future projects to enhance IT security.  
 
 PwnyTrap's primary audience is the IT professional, but it is in fact relevant to all online users and can be easily used by anyone without them having concern for the underlying API or code.  
 
@@ -44,18 +44,14 @@ I hope this app sparks conversation amongst software developers around the conce
 
 
 ## - Features -  
-- **API Key** This app requires a valid [HaveIBeenPwned.com] API Key and when first run the program checks for its presence in a file called `creds.json`.  
+- **API Key** This app requires a valid HaveIBeenPwned.com API Key and when first run the program checks for its presence in a file called `creds.json`.  
 
-- **Check Password** allows the user to type in a password. For confidentiality, the letters typed are not shown on screeen. Internally the password is encrypted using the SHA-1 hashing algorithm and only the first five characters are used to build the search query for the API. The response will indicate whether the password was compromised and how many times it appears in the database. The message is dsplayed in red if it was matched and green if it wasn't.  
+- **Check Password** allows the user to type in a password. For confidentiality, the letters typed are not shown on screeen. Internally the password is encrypted using the SHA-1 hashing algorithm and only the first five characters are used to build the search query for the API. The response will indicate whether the password was compromised and how many times it appears in the database. The message is dsplayed in red if it is matched and green if it isn't.  
 (You can read more about implementing password privacy using the k-anonymity model [here](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity).)
-<h2 align="center"><img src="readme-docs/lookup-password.png"></h2>
 
 - **Check Email Address** allows the user to type in an email address. The input is checked to ensure that a correctly formatted email address was entered (_not_ that it is a _live_ email account) and if so the database is searched and a relevant message displayed.
-<h2 align="center"><img src="readme-docs/lookup-email-pwned.png"></h2>
-<h2 align="center"><img src="readme-docs/lookup-email-notfound.png"></h2>
-<h2 align="center"><img src="readme-docs/lookup-email-invalid-address.png"></h2>
 
-- **Lookup Breach Info** allows the user to enter a breach name 
+- **Lookup Breach Info** allows the user to enter a breach name and call up full details of the breach including a description and teh data of data exposed in the breah. 
 <h2 align="center"><img src="readme-docs/lookup-breach.png"></h2>  
 
 - **Show All Breaches** returns all 500+ breach names in the HIBP database, displayed in three columns. User can scroll through the list. Enter Y or y to return to the menu.
@@ -91,22 +87,36 @@ I hope this app sparks conversation amongst software developers around the conce
 
 ## - Testing -
 <h2 align="center"><img src="readme-docs/.png"></h2>
-<h2 align="center"><img src="readme-docs/.png"></h2>
 
-On program start I tested that the credentials file exists and contains a readabe API key.  The first error shows if the file can't be found and the second if its contents are not valid, e.g. I removed the colon delimiter from the JSON api key data. In either either case the program can't continue, clearly informs the user, and gracefully exits. 
+-   All menu options were tested to ensure that they opened the correct functionality and that all of them returned to the main menu screen.  
+
+-   On program start I tested that the credentials file exists and contains a readabe API key.  Results of teh error messages are in the following two images. The first error shows if the file can't be found, and the second shows if its contents are not valid, e.g. to test I removed the colon delimiter from the JSON api key data. In either either case the program clearly informs the user that it can't continue, and gracefully exits. 
 <h2 align="center"><img src="readme-docs/test-creds-file-not-found-err.png"></h2>
 <h2 align="center"><img src="readme-docs/test-creds-json-decode-err.png"></h2>
 
-I tested for and invalid API key.
+-   I tested to ensure that an invalid API key would be gracefully handled within the search functions.  The following image shows a HTTP response code 401 being handled before returning control to the user..
 <h2 align="center"><img src="readme-docs/test-api-key-invalid-err.png"></h2>
 
+- I tested **Check Password** by typing in a password and observing that for confidentiality, the letters typed were not shown on screeen. The response indicated whether the password was compromised and how many times it appeard in the database. The message was dsplayed in red if it was matched and green if it wasn't. I checked known compromised and uncompromised passwords and then I compared results to the same test using the live HIBP site.
+<h2 align="center"><img src="readme-docs/lookup-password.png"></h2>
+
+- I tested **Check Email Address** by typing in some valid and invalid email addresses. The input was correctly flagged if invalid and a relevant message displayed. I was then prompted to re-enter the address.  I checked known compromised and uncompromised email accounts and then I compared results to the same test using the live HIBP site.
+<h2 align="center"><img src="readme-docs/lookup-email-invalid-address.png"></h2>
+<h2 align="center"><img src="readme-docs/lookup-email-pwned.png"></h2>
+<h2 align="center"><img src="readme-docs/lookup-email-notfound.png"></h2>
+
+- I teseted **Lookup Breach Info** allows the user to enter a breach name and call up full details of the breach including a description and the data exposed in the breach. I compared this to the live HIBP site.
+<h2 align="center"><img src="readme-docs/lookup-breach.png"></h2>  
+
+- I tested **Show All Breaches** by checking that it returns all 500+ breach names in the HIBP database by comparing it to the live HIBP site. I tested that I can scroll up through the list and must consciously enter 'y' to return to the menu.
+<h2 align="center"><img src="readme-docs/show-all-breaches.png"></h2>  
 
 ### Code Validation
 -   The [PEP8 Online](http://pep8online.com) linter was used to ensure the code adhered to the Python Style Guidelines.
 <h2 align="center"><img src=readme-docs/pep8.png></h2>
 
--   https://pythex.org was used to test regular expressions with various inputs
--   #_TODO
+-   **https://pythex.org** was used to test both regular expressions used in the program: `email_regex` and `html_regex`.  I tested that `check_email()` correctly identifies email addresses with, for example, spaces in the domain name, or a typo like a comma in place of the 'dot'. For the regex used in `strip_html()` I checked some sample descriptions from the breach info.
+
 
 ### Bugs  
 
@@ -150,7 +160,7 @@ Deployment of the site to Heroku was done as follows:
 
 ### Code
 -   No code was directly copied to this project but numerous resources helped me understand what I needed and how best to code it. These include: The official [Python Docs](https://docs.python.org), StackOverflow.com, W3Schools.com, RealPython.com  
--   Automate the Boring Stuff with Python, 2nd Edition - Al Sweigart. Very helpful as an intro to implementing regex searching in Python and also working with the requests and json modules
+-   _Automate the Boring Stuff with Python, 2nd Edition_, Al Sweigart. Very helpful as an intro to implementing regex searching in Python and also working with the `requests` and `json` modules
 -   https://www.regular-expressions.info/email.html
 -   Other projects using the HIBP API providing inspiration included:  
     https://github.com/Radial01/PwnyCorral  

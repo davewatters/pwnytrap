@@ -278,7 +278,7 @@ class HibpAPI:
         '''
         while True:
             if name == '':
-                # ask the user to enter a search term
+                # ask the user to enter a search term, strip all spaces
                 name = input("\nEnter breach name: ").strip().replace(' ', '')
 
             resp = self.query_api("breach/" + name)
@@ -316,6 +316,7 @@ class HibpAPI:
                 print(f"Number of Compromised Accounts: {CLR_LIGHTRED}{v:,}" +
                       CLR_END)
             elif k == 'Description':
+                # calls stip_html() to make the description more readable
                 print(f"{k:12}:\n{CLR_LIGHTGREEN}{strip_html(v)}{CLR_END}")
             elif k == 'DataClasses':
                 print(f"Type of Data Compromised:\n{CLR_LIGHTRED}{v}{CLR_END}")
@@ -375,20 +376,19 @@ def help_screen():
 
         0 - Shows this help screen
 
-        1 - Allows you to search the HIBP Compromised Passwords database. The 
+        1 - Allows you to search the HIBP Compromised Passwords database. The
             entered password is not visible, is encrypted, and is not logged
             anywhere. Ony the first five characters of the SHA-1 hash are sent
-            to the API. (See the HIBP site about use of the k-Anonymity model)
+            to the API.
 
         2 - Search the HIBP database for an email address.
-            A positive result will show the number and names of the breaches.
+            A positive result will show the names of the breaches found.
 
-        3 - Search for detailed info by breach name.
+        3 - Case-insensitive search for detailed breach info by name.
 
-        4 - Shows a list of all of the breaches in the database
+        4 - Lists all of the breaches in the database
 
-        For further reading about the API, see the HIBP website FAQ and spec:
-        https://haveibeenpwned.com/FAQs, https://haveibeenpwned.com/API/v3
+        For for full API specification see https://haveibeenpwned.com/API/v3 
 
         Lastly, in case you were wondering.. PwnyTrap is pronounced 'Pony Trap'
         It comes from the leetspeak word 'pwn' meaning to be beaten or
