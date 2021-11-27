@@ -44,6 +44,8 @@ I hope this app sparks conversation amongst software developers around the conce
 
 
 ## - Features -  
+- **API Key** This app requires a valid [HaveIBeenPwned.com] API Key and when first run the program checks for its presence in a file called `creds.json`.  
+
 - **Check Password** allows the user to type in a password. For confidentiality, the letters typed are not shown on screeen. Internally the password is encrypted using the SHA-1 hashing algorithm and only the first five characters are used to build the search query for the API. The response will indicate whether the password was compromised and how many times it appears in the database. The message is dsplayed in red if it was matched and green if it wasn't.  
 (You can read more about implementing password privacy using the k-anonymity model [here](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity).)
 <h2 align="center"><img src="readme-docs/lookup-password.png"></h2>
@@ -56,10 +58,9 @@ I hope this app sparks conversation amongst software developers around the conce
 - **Lookup Breach Info** allows the user to enter a breach name 
 <h2 align="center"><img src="readme-docs/lookup-breach.png"></h2>  
 
-- **List All Breaches in the HIBP database** returns all 500+ breach names displayed in three columns. User can scroll through the list. Enter Y or y to return to the menu.
-<h2 align="center"><img src="readme-docs/.png"></h2>  
+- **Show All Breaches** returns all 500+ breach names in the HIBP database, displayed in three columns. User can scroll through the list. Enter Y or y to return to the menu.
+<h2 align="center"><img src="readme-docs/show-all-breaches.png"></h2>  
 
-- **API Key** This app requires a valid [HaveIBeenPwned.com] API Key and when first run the program checks for its presence in a file called creds.json is the same folder as run.py
 
 ## - Future Features -
 -   Refactor the HibpAPI class to search on NTLM hashes (aka NTHash) of the given password.  Could create an option or separate Active Directory test tool using HIBP's offline NTLM hash dump.
