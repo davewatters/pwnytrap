@@ -104,7 +104,7 @@ It's important to note that the entered password is never sent over the network 
 
 
 ### Code Validation
--   The [PEP8 Online](http://pep8online.com) was used to ensure the code adhered to the Python Style Guideines.
+-   The [PEP8 Online](http://pep8online.com) was used to ensure the code adhered to the Python Style Guidelines.
 <h2 align="center"><img src=readme-docs/pep8.png></h2>
 
 -   https://pythex.org was used to test regular expressions with various inputs

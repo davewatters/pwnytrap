@@ -30,7 +30,7 @@ APP_VERSION = 'PwnyTrap v1.0'
 CREDS_FILE = 'creds.json'
 HIBP_API_URL = 'https://haveibeenpwned.com/api/v3/'
 HIBP_PWD_API_URL = 'https://api.pwnedpasswords.com/range/'
-USER_AGENT = {"user-agent": "PwnyTrap"}
+USER_AGENT = {"user-agent": "PwnyTrap/1.0"}
 
 
 # Email regex includes an apostrophe before the @ symbol -
@@ -60,7 +60,7 @@ def get_yesno(question='', def_opt=True):
     '''
     Gets user's response to a Yes or No question.
     Optional parameter Defaults to True for Yes if Enter key hit.
-    Returns True|False if Yes|No is chosen
+    Returns True|False if Yes|No is chosen.
     '''
     if def_opt is None:
         option = ' [y/n] '
@@ -109,7 +109,7 @@ def strip_html(text):
 class HibpAPI:
     '''
     Class to process data from the HIBP API
-    API Services available are: breachedaccount, breaches, breach,
+    API Services available: breachedaccount, breaches, breach,
         dataclass, pasteaccount
     API Services implemented: breachedaccount, breaches, breach
     '''
@@ -129,13 +129,18 @@ class HibpAPI:
             with open(CREDS_FILE, 'r') as f:
                 self.api_key = json.load(f)
         except OSError as e:
+            # Can't open file - file not found..?
             errno, strerr = e.args
             print(f"Error accessing {CREDS_FILE}. I/O Error {errno}: {strerr}")
             print("API Key not set.")
         except JSONDecodeError as e:
+            # File open, can't read data - invalid JSON..?
             print(f"Error reading {CREDS_FILE}...")
             print(f"{e}")
             print("API Key not set.")
+        except Exception as e:
+            print(f"Error occurred processing {CREDS_FILE}...")
+            print(f"{e}")
         else:
             print("\nCredentials file read OK...")
             self.creds_file_ok = True
