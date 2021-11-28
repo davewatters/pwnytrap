@@ -41,17 +41,23 @@ I hope this app sparks conversation amongst software developers around the conce
         The user is presented with a main screen displaying the menu options available. They can enter a number to open that menu option.  The Help/Info screen option presents its own screen of text content.  All other content is generated dynamically based on either the user's input or relevant system messages and the screen will scroll up to display it.
     -   #### User Input
         Depending on the option chosen, the user inputs a value and hits the Enter key to submit to the API search. If the data entered is invalid the user is informed and asked to re-enter it. For all options the system awaits a Yes/No response - this ensures that the user has time to read the information. The input is designed to make the user's workflow easier by defaulting to either Y or N in the most likely situation. This allows the user to repeat the option by just hitting Enter, e.g. 'Check another? [Y/n]' - hitting enter here accepts the default answer 'Y(es)'.  Overall, the user can accomplish tasks with minimal input.  
+    -   #### Process/Logic Flow
+        The basic menu-driven logic flow through the program is illustrated in the following flowchart..  
+        <h2 align="center"><img src="readme-docs/flowchart-pwnytrap-ci-pp3.png"></h2>  
+
 
 
 ## - Features -  
 - **API Key** This app requires a valid HaveIBeenPwned.com API Key and when first run the program checks for its presence in a file called `creds.json`.  
 
+- A simple **Main Menu** screen presents the user with five options and a prompt to input their choice. All options are visible and their meaning obvious. 
+
 - **Check Password** allows the user to type in a password. For confidentiality, the letters typed are not shown on screeen. Internally the password is encrypted using the SHA-1 hashing algorithm and only the first five characters are used to build the search query for the API. The response will indicate whether the password was compromised and how many times it appears in the database. The message is dsplayed in red if it is matched and green if it isn't.  
 (You can read more about implementing password privacy using the k-anonymity model [here](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity).)
 
-- **Check Email Address** allows the user to type in an email address. The input is checked to ensure that a correctly formatted email address was entered (_not_ that it is a _live_ email account) and if so the database is searched and a relevant message displayed.
+- **Check Email Address** allows the user to type in an email address. The input is checked to ensure that a valid, i.e. a _correctly formatted_, email address was entered (_not_ checking if it is a live email account) and if so the database is searched and a relevant message displayed.
 
-- **Lookup Breach Info** allows the user to enter a breach name and call up full details of the breach including a description and teh data of data exposed in the breah. 
+- **Lookup Breach Info** allows the user to enter a breach name and call up full details of the breach including a description and the details of types of data exposed in the breach. Note: The HTML markup returned in the description is stripped here to provide clarity in the terminal display.   
 <h2 align="center"><img src="readme-docs/lookup-breach.png"></h2>  
 
 - **Show All Breaches** returns all 500+ breach names in the HIBP database, displayed in three columns. User can scroll through the list. Enter Y or y to return to the menu.
@@ -86,9 +92,8 @@ I hope this app sparks conversation amongst software developers around the conce
 <!---  --->
 
 ## - Testing -
-<h2 align="center"><img src="readme-docs/.png"></h2>
 
--   All menu options were tested to ensure that they opened the correct functionality and that all of them returned to the main menu screen.  
+-   All menu options were tested to ensure that they opened the correct functionality and that all of t returned to the main menu screen.  
 
 -   On program start I tested that the credentials file exists and contains a readabe API key.  Results of teh error messages are in the following two images. The first error shows if the file can't be found, and the second shows if its contents are not valid, e.g. to test I removed the colon delimiter from the JSON api key data. In either either case the program clearly informs the user that it can't continue, and gracefully exits. 
 <h2 align="center"><img src="readme-docs/test-creds-file-not-found-err.png"></h2>
@@ -110,7 +115,7 @@ I hope this app sparks conversation amongst software developers around the conce
 
 - I tested **Show All Breaches** by checking that it returns all 500+ breach names in the HIBP database by comparing it to the live HIBP site. I tested that I can scroll up through the list and must consciously enter 'y' to return to the menu.
 <h2 align="center"><img src="readme-docs/show-all-breaches.png"></h2>  
-
+ 
 ### Code Validation
 -   The [PEP8 Online](http://pep8online.com) linter was used to ensure the code adhered to the Python Style Guidelines.
 <h2 align="center"><img src=readme-docs/pep8.png></h2>

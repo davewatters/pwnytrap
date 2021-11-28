@@ -379,20 +379,19 @@ def help_screen():
         1 - Allows you to search the HIBP Compromised Passwords database. The
             entered password is not visible, is encrypted, and is not logged
             anywhere. Ony the first five characters of the SHA-1 hash are sent
-            to the API.
+            to the API.  Result includes count of password exposure.
 
         2 - Search the HIBP database for an email address.
-            A positive result will show the names of the breaches found.
+            Result shows the names of the breaches in which it is found.
 
         3 - Case-insensitive search for detailed breach info by name.
 
-        4 - Lists all of the breaches in the database
+        4 - Lists names and a total of all of the breaches in the database.
 
-        For for full API specification see https://haveibeenpwned.com/API/v3 
+        For for full API specification see https://haveibeenpwned.com/API/v3
 
         Lastly, in case you were wondering.. PwnyTrap is pronounced 'Pony Trap'
-        It comes from the leetspeak word 'pwn' meaning to be beaten or
-        compromised in some way.
+        - from the leetspeak word 'pwn' meaning to be beaten or compromised.
     """
     print(textwrap.dedent(s))
     input("Enter to return to the main screen...")
