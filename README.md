@@ -29,7 +29,7 @@ PwnyTrap's purpose on one level is to be a simple tool to easily enable password
 
 PwnyTrap's primary audience is the IT professional, but it is in fact relevant to all online users and can be easily used by anyone without them having concern for the underlying API or code.  
 
-I hope this app sparks conversation amongst software developers around the concept of incorporating a HibpAPI class, or similar implementation, into an app's login or registration handling code.
+I hope this app sparks conversation amongst software developers around the concept of incorporating a HibpAPI class, or similar implementation, into an app's login or registration handling code.  At the very least, if users see their email address or password pwned it should encourage better online security habits.
 
 
 ## - User Experience Design -
@@ -52,10 +52,10 @@ I hope this app sparks conversation amongst software developers around the conce
 
 - A simple **Main Menu** screen presents the user with five options and a prompt to input their choice. All options are visible and their meaning obvious. 
 
-- **Check Password** allows the user to type in a password. For confidentiality, the letters typed are not shown on screeen. Internally the password is encrypted using the SHA-1 hashing algorithm and only the first five characters are used to build the search query for the API. The response will indicate whether the password was compromised and how many times it appears in the database. The message is dsplayed in red if it is matched and green if it isn't.  
-(You can read more about implementing password privacy using the k-anonymity model [here](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity).)
+- **Check Password** allows the user to type in a password. For confidentiality, the letters typed are not shown on screeen. Internally the password is encrypted using the SHA-1 hashing algorithm and only the first five characters are used to build the search query for the API. This API 'range' search returns multiple hash suffixes to preserve the anonymity of the user. (You can read more about implementing password privacy using the _k-Anonymity model_ [here](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity).) The response will indicate whether the password was compromised and how many times it appears in the database. The message is dsplayed in red if it is matched and green if it isn't.  
 
-- **Check Email Address** allows the user to type in an email address. The input is checked to ensure that a valid, i.e. a _correctly formatted_, email address was entered (_not_ checking if it is a live email account) and if so the database is searched and a relevant message displayed.
+
+- **Check Email Address** allows the user to type in an email address. The input is checked to ensure that a valid, i.e. a _correctly formatted_, email address was entered (_not_ checking if it is a live email account) and if so the database is searched and a relevant message displayed. (Screenshots in Testing section, below.)
 
 - **Lookup Breach Info** allows the user to enter a breach name and call up full details of the breach including a description and the details of types of data exposed in the breach. Note: The HTML markup returned in the description is stripped here to provide clarity in the terminal display.   
 <h2 align="center"><img src="readme-docs/lookup-breach.png"></h2>  
@@ -63,6 +63,8 @@ I hope this app sparks conversation amongst software developers around the conce
 - **Show All Breaches** returns all 500+ breach names in the HIBP database, displayed in three columns. User can scroll through the list. Enter Y or y to return to the menu.
 <h2 align="center"><img src="readme-docs/show-all-breaches.png"></h2>  
 
+- **Help Screen** displays information about each menu item.
+<h2 align="center"><img src="readme-docs/help-screen.png"></h2>  
 
 ## - Future Features -
 -   Refactor the HibpAPI class to search on NTLM hashes (aka NTHash) of the given password.  Could create an option or separate Active Directory test tool using HIBP's offline NTLM hash dump.
@@ -95,14 +97,14 @@ I hope this app sparks conversation amongst software developers around the conce
 
 -   All menu options were tested to ensure that they opened the correct functionality and that all of t returned to the main menu screen.  
 
--   On program start I tested that the credentials file exists and contains a readabe API key.  Results of teh error messages are in the following two images. The first error shows if the file can't be found, and the second shows if its contents are not valid, e.g. to test I removed the colon delimiter from the JSON api key data. In either either case the program clearly informs the user that it can't continue, and gracefully exits. 
+-   On program start I tested that the credentials file exists and contains a readabe API key.  Results of the error messages are in the following two images. The first error shows if the file can't be found, and the second shows if its contents are not valid, e.g. to test I removed the colon delimiter from the JSON api key data. In either case the program clearly informs the user that it can't continue, and gracefully exits. 
 <h2 align="center"><img src="readme-docs/test-creds-file-not-found-err.png"></h2>
 <h2 align="center"><img src="readme-docs/test-creds-json-decode-err.png"></h2>
 
 -   I tested to ensure that an invalid API key would be gracefully handled within the search functions.  The following image shows a HTTP response code 401 being handled before returning control to the user..
 <h2 align="center"><img src="readme-docs/test-api-key-invalid-err.png"></h2>
 
-- I tested **Check Password** by typing in a password and observing that for confidentiality, the letters typed were not shown on screeen. The response indicated whether the password was compromised and how many times it appeard in the database. The message was dsplayed in red if it was matched and green if it wasn't. I checked known compromised and uncompromised passwords and then I compared results to the same test using the live HIBP site.
+- I tested **Check Password** by typing in a password and observing that, for confidentiality, the letters typed were not shown on screeen. The response indicated whether the password was compromised and how many times it appeard in the database. The message was displayed in red if it was matched and green if it wasn't. I checked known compromised and uncompromised passwords and then I compared results to the same test using the live HIBP site.
 <h2 align="center"><img src="readme-docs/lookup-password.png"></h2>
 
 - I tested **Check Email Address** by typing in some valid and invalid email addresses. The input was correctly flagged if invalid and a relevant message displayed. I was then prompted to re-enter the address.  I checked known compromised and uncompromised email accounts and then I compared results to the same test using the live HIBP site.
@@ -128,6 +130,7 @@ I hope this app sparks conversation amongst software developers around the conce
 1. In the `check_password()` function, initially when using `hashlib.sha1()` to encrypt the password, I made the mistake of not encoding the password using `password.encode('utf-8')`. **Fixed.**
 2. Initially tried to use `resp.text` to parse the results of the breach search before realising it should have been `resp.json()` which correctly parses to a list of dictionaries for further processing. **Fixed.** 
 3. Regex used to validate email addresses incorrectly rejected email addresses containing an apostrope. **Fixed.** 
+4. Help screen missing from flowchart.
 <!---  --->
 <!--- end of testing section --->
 <!---  --->
@@ -137,7 +140,7 @@ I hope this app sparks conversation amongst software developers around the conce
 ### Heroku  
 The live deployed site can be viewed on Heroku [HERE](https://ci-pp3-pwnytrap.herokuapp.com)
 
-The Project repository (repo) is at [https://github.com/davewatters/pwnytrap](https://github.com/davewatters/pwnytrap-ci-pp3)
+The Project repository (repo) is at [https://github.com/davewatters/pwnytrap-ci-pp3](https://github.com/davewatters/pwnytrap-ci-pp3)
 
 Note: The project repo was initially generated from the [Code Institute Python Essentials template](https://github.com/Code-Institute-Org/python-essentials-template) 
 

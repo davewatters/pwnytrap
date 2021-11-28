@@ -209,6 +209,7 @@ class HibpAPI:
         passwd_hash = hashlib.sha1(password.encode('utf-8')).hexdigest()
         print('\nPassword encrypted...')
         print(f'SHA-1 hash digest of password: {passwd_hash}')
+        # only use first five chars of hash to search
         search_hash = passwd_hash[:5].upper()
         try:
             resp = requests.get(HIBP_PWD_API_URL + search_hash)
@@ -222,11 +223,13 @@ class HibpAPI:
             print("Error occurred checking for compromised password...")
             print(f"{e}")
         else:
+            # resp.text contains multiple hash suffixes with a count
             matches = resp.text.splitlines()
             count = 0
             for s in matches:
                 # s contains '<--35 char hash suffix-->:<count>'
                 h, c = s.split(':')
+                # is search term + hash suffix == to our password hash..?
                 if search_hash + h == passwd_hash.upper():
                     count = int(c)
                     break
@@ -374,19 +377,19 @@ def help_screen():
     s = """
         Help & Information
 
-        0 - Shows this help screen
+         0 - Shows this help screen
 
-        1 - Allows you to search the HIBP Compromised Passwords database. The
-            entered password is not visible, is encrypted, and is not logged
-            anywhere. Ony the first five characters of the SHA-1 hash are sent
-            to the API.  Result includes count of password exposure.
+         1 - Allows you to search the HIBP Compromised Passwords database. The
+             entered password is not visible, is encrypted, and is not logged
+             anywhere.Only the first five characters of the SHA-1 hash are sent
+             to the API.  Result includes count of password exposure.
 
-        2 - Search the HIBP database for an email address.
-            Result shows the names of the breaches in which it is found.
+         2 - Search the HIBP database for an email address.
+             Result shows the names of the breaches in which it is found.
 
-        3 - Case-insensitive search for detailed breach info by name.
+         3 - Case-insensitive search for detailed breach info by name.
 
-        4 - Lists names and a total of all of the breaches in the database.
+         4 - Lists names and a total of all of the breaches in the database.
 
         For for full API specification see https://haveibeenpwned.com/API/v3
 
