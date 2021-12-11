@@ -3,7 +3,24 @@
 ### A Python tool to query the https://haveibeenpwned.com API to see if a given password or email address has been compromised in a data breach.
 <br />
 
-You can view the PwnyTrap live app [HERE.](https://ci-pp3-pwnytrap.herokuapp.com/)
+###   [ Copied from my CI-PP3 using GitHub Importer ]
+
+### - Goals for this copy & features to work on - 
+-   Learn more about working with Python classes, `@classmethod` etc
+-   Improve the HibpAPI class as it's currently really not optimal
+    - wish I'd seen [Corey Shafer's](https://www.youtube.com/c/Coreyms) Python OOP tutorials sooner - study again and refactor
+-   **Make the app a command-line tool**, e.g. usage: pwnytrap -e user@example.com
+-   Optimize loops with `enumerate()` and list comprehensions
+-   Refactor a few functions
+    - check for api_key should be better implemented without is_key_ok property
+    - cls() ffs!! rename immediately to clear_term or clear_screen
+    - check_email should dsiplay breaches in columns
+    - disp breach - should be able to call from check_email
+    - main
+    - breach details should display compromised datatypes properly    
+-   
+
+You can view the PwnyTrap live app [HERE]<!-- (https://ci-pp3-pwnytrap.herokuapp.com/) -->
 <br />
 <br />
 
@@ -138,11 +155,11 @@ I hope this app sparks conversation amongst software developers around the conce
 ## - Deployment -
 
 ### Heroku  
-The live deployed site can be viewed on Heroku [HERE](https://ci-pp3-pwnytrap.herokuapp.com)
+The live deployed site can be viewed on Heroku [HERE]<!-- (https://ci-pp3-pwnytrap.herokuapp.com)-->
 
-The Project repository (repo) is at [https://github.com/davewatters/pwnytrap-ci-pp3](https://github.com/davewatters/pwnytrap-ci-pp3)
+The Project repository (repo) is at [https://github.com/davewatters/pwnytrap](https://github.com/davewatters/pwnytrap)
 
-Note: The project repo was initially generated from the [Code Institute Python Essentials template](https://github.com/Code-Institute-Org/python-essentials-template) 
+Note: The project repo was initially imported from my [Code Institute Portfolio Project 3](https://github.com/davewatters/pwnytrap-ci-pp3) 
 
 Deployment of the site to Heroku was done as follows:
  
