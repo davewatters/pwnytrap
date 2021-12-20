@@ -187,8 +187,7 @@ class HibpAPI:
                 # breaches is now a list of dicts
                 print("\nEmail address appears in the following " +
                       f"{len(breaches)} data breaches..")
-                for breach in breaches:
-                    print(breach['Name'])
+                self.disp_breach_names(breaches)
 
             elif resp.status_code == 404:
                 print(CLR_LIGHTGREEN +
@@ -248,22 +247,28 @@ class HibpAPI:
 
         return
 
+    def disp_breach_names(self, breaches):
+        '''
+        Displays the breach names in three columns.
+        Accepts list of breach dictionary.
+        '''
+        col = 0
+        for breach in breaches:
+            # for each outer loop I'd like three columns
+            print(f"{breach['Name'].strip():<26}", end='')
+            col += 1
+            if col == 3:
+                print("")
+                col = 0
+        print("")
+
     def show_all_breaches(self):
         '''
         Show the full list of breaches currently in the HIBP dump
         '''
         resp = self.query_api("breaches")
         breaches = resp.json()  # returns a list of dicts
-        col = 0
-        for breach in breaches:
-            # for each outer loop I'd like three columns
-            if col < 3:
-                print(f"{breach['Name'].strip():<26}", end='')
-                col += 1
-            else:
-                print("")
-                col = 0
-
+        self.disp_breach_names(breaches)
         print(f"\nThere are {len(breaches)} breaches listed.")
         print("\nYou can use the breach name as it appears in this list\n" +
               "with the Lookup Breach Details menu option.")
