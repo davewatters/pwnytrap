@@ -26,11 +26,11 @@ import textwrap
 from requests.models import HTTPError
 
 
-APP_VERSION = 'PwnyTrap v1.0'
+APP_VERSION = 'PwnyTrap v1.1'
 CREDS_FILE = 'creds.json'
 HIBP_API_URL = 'https://haveibeenpwned.com/api/v3/'
 HIBP_PWD_API_URL = 'https://api.pwnedpasswords.com/range/'
-USER_AGENT = {"user-agent": "PwnyTrap/1.0"}
+USER_AGENT = {"user-agent": "PwnyTrap/1.1"}
 
 
 # Email regex includes an apostrophe before the @ symbol -
@@ -47,7 +47,7 @@ CLR_LIGHTGREEN = '\033[92m'
 CLR_END = '\033[0m'
 
 
-def cls():
+def clear_screen():
     '''
     Clears the screen and places cursor at top left
     Similar to 'nix terminal clear or Win command cls
@@ -372,7 +372,7 @@ def help_screen():
     '''
     Displays the help information screen
     '''
-    cls()
+    clear_screen()
     disp_app_info()
     s = """
         Help & Information
@@ -413,7 +413,7 @@ def disp_main_page():
     '''
     Displays the main greeting and menu options
     '''
-    cls()
+    clear_screen()
     disp_app_info()
     s = """
         -= Catch bad pa$$words using the Have I Been Pwned API =-\n\n

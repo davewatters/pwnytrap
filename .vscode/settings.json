@@ -1,5 +1,5 @@
 {
-   "python.linting.pylintEnabled": true,
+   "python.linting.pylintEnabled": false,
    "python.linting.enabled": true,
    "python.linting.pycodestyleEnabled": false,
    "python.linting.flake8Enabled": true,
@@ -22,5 +22,6 @@
    },
    "files.autoSave": "off",
    "workbench.colorTheme": "Visual Studio Dark",
-   "editor.defaultFormatter": "HookyQR.beautify"
+   "editor.defaultFormatter": "HookyQR.beautify",
+   "python.pythonPath": "/Users/davidwatters/dev/pwnytrap/.venv/bin/python"
 }
