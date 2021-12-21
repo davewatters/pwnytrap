@@ -252,6 +252,7 @@ class HibpAPI:
         Displays the breach names in three columns.
         Accepts list of breach dictionary.
         '''
+        print("")
         col = 0
         for breach in breaches:
             # for each outer loop I'd like three columns
@@ -261,6 +262,7 @@ class HibpAPI:
                 print("")
                 col = 0
         print("")
+        return
 
     def show_all_breaches(self):
         '''
@@ -327,7 +329,12 @@ class HibpAPI:
                 # calls stip_html() to make the description more readable
                 print(f"{k:12}:\n{CLR_LIGHTGREEN}{strip_html(v)}{CLR_END}")
             elif k == 'DataClasses':
-                print(f"Type of Data Compromised:\n{CLR_LIGHTRED}{v}{CLR_END}")
+                print("Type of Data Compromised:")
+                print(CLR_LIGHTRED, end='')
+                for dataclass in v:
+                    # print comma separator unless last item in list
+                    print(dataclass, end=(', ' if dataclass != v[-1] else ''))
+                print(CLR_END)
             else:
                 print(f"{k:12}: {v}")
 
@@ -386,8 +393,8 @@ def help_screen():
 
          1 - Allows you to search the HIBP Compromised Passwords database. The
              entered password is not visible, is encrypted, and is not logged
-             anywhere.Only the first five characters of the SHA-1 hash are sent
-             to the API.  Result includes count of password exposure.
+             anywhere. Only the first five characters of the SHA1 hash are sent
+             to the API. Result includes count of password exposure.
 
          2 - Search the HIBP database for an email address.
              Result shows the names of the breaches in which it is found.
