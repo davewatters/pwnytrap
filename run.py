@@ -117,14 +117,14 @@ class HibpAPI:
         self.api_url = HIBP_API_URL
         self.pwd_api_url = HIBP_PWD_API_URL
         self.user_agent = USER_AGENT
-        self.creds_file_ok = False
         self.api_key = ''
 
     def init_api_key(self):
         '''
         Load API key from creds file.
         '''
-        print("\nChecking credentials file...\n")
+        init_creds_ok = False
+        print("\nChecking credentials file...")
         try:
             with open(CREDS_FILE, 'r') as f:
                 self.api_key = json.load(f)
@@ -143,10 +143,10 @@ class HibpAPI:
             print(f"Error occurred processing {CREDS_FILE}...")
             print(f"{e}")
         else:
-            print("\nCredentials file read OK...")
-            self.creds_file_ok = True
+            print("Credentials file read OK.")
+            init_creds_ok = True
 
-        return
+        return init_creds_ok
 
     def query_api(self, service_param):
         '''
@@ -447,8 +447,7 @@ def main():
     '''
     disp_app_info()
     hibp = HibpAPI()
-    hibp.init_api_key()
-    if not hibp.creds_file_ok:
+    if not hibp.init_api_key():
         print("Program can't continue without valid credentials file.")
         print("Goodbye.")
         exit(1)
