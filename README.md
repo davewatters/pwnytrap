@@ -1,14 +1,6 @@
 # PwnyTrap
 
-### A Python tool to query the https://haveibeenpwned.com API to see if a given password or email address has been compromised in a data breach.
-<br />
-
-###   [ Copied from my CI-PP3 using GitHub Importer ]
-
-
-You can view the PwnyTrap live app [HERE]<!-- (https://ci-pp3-pwnytrap.herokuapp.com/) -->
-<br />
-<br />
+### A Python tool to query the https://haveibeenpwned.com API to see if a given password or email address has been compromised in a data breach.  
 
 <h2 align="center"><img src="readme-docs/pwnytrap-v1.0-main-screen.png"></h2>
 
@@ -16,6 +8,7 @@ You can view the PwnyTrap live app [HERE]<!-- (https://ci-pp3-pwnytrap.herokuapp
 * [Purpose](#purpose)
 * [Features](#features)
 * [Requirements](#requirements)
+* [Usage](#usage)
 * [Future Features and Bugs](#future-features-and-bugs)
 * [Deployment](#deployment)
 * [Credits](#credits)
@@ -23,15 +16,9 @@ You can view the PwnyTrap live app [HERE]<!-- (https://ci-pp3-pwnytrap.herokuapp
 ## - Purpose -      
 [This app was created as the third Portfolio Project (PP3) for the Code Institute's Full Stack Web Development course. The app is to showcase Python skills, and as a requirement is deployed to Heroku using a Code Institute mock terminal template.]  
 
-In short:  
-A Python tool to query the HaveIBeenPwned.com API to see if a given password or email address was compromised in a data breach.
+PwnyTrap is Python tool to query the HaveIBeenPwned.com API to see if a given password or email address was compromised in a data breach.
 
-In more detail:   
 PwnyTrap's purpose on one level is to be a simple tool to easily enable password & email address lookups to the HaveIBeenPwned.com (aka HIBP) database. On another level, it was created as an idea for a Python module which could be imported for use in future projects to enhance IT security, for example, during a user signup/registration process.
-
-PwnyTrap's primary audience is the IT professional, but it is in fact relevant to all online users and can be easily used by anyone without them having concern for the underlying API or code.  
-
-I hope this app sparks conversation amongst software developers around the concept of incorporating a HibpAPI class, or similar implementation, into an app's login or registration handling code.  At the very least, if users see their email address or password pwned it should encourage better online security habits.
 
 
 ## - Features -    
@@ -50,11 +37,21 @@ I hope this app sparks conversation amongst software developers around the conce
 
 - Python 3.6  
 - The following dependencies are imported:
-    - `getpass`, `haslib`, `json`, `re`, `requests`, `texwrap` 
+    - `getpass`, `hashlib`, `json`, `re`, `requests`, `textwrap` 
 
 
-- **API Key** To search for compromised email addresses this app requires a valid HaveIBeenPwned.com API Key and when first run the program checks for its presence in a file called `creds.json`.  The key is not required for password searches.
+- **API Key** To search for compromised email addresses this app requires a valid HaveIBeenPwned.com API Key and when first run the program checks for its presence in a file called `creds.json`.  The key is not required for password searches.  The credentials file has the following format:
+```
+{
+  "hibp-api-key": "[_SECRET_API_KEY_]"
+}
+```
 
+
+## - Usage -  
+```
+python3 run.py
+```
 
 ## - Future Features and Bugs -  
 
@@ -72,11 +69,9 @@ I hope this app sparks conversation amongst software developers around the conce
 ## - Deployment -
 
 ### Heroku  
-The live deployed site can be viewed on Heroku [HERE]<!-- (https://ci-pp3-pwnytrap.herokuapp.com)-->
-
 The Project repository (repo) is at [https://github.com/davewatters/pwnytrap](https://github.com/davewatters/pwnytrap)
 
-Note: The project repo was initially imported from my [Code Institute Portfolio Project 3](https://github.com/davewatters/pwnytrap-ci-pp3) 
+Note: The project repo was initially imported from my [Code Institute Portfolio Project 3](https://github.com/davewatters/pwnytrap-ci-pp3) and the live deployed project can be viewed on Heroku [HERE](https://ci-pp3-pwnytrap.herokuapp.com)
 
 Deployment of the site to Heroku was done as follows:
  
