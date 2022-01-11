@@ -6,7 +6,9 @@ __pycache__/
 *.py[cod]
 node_modules/
 .github/
-creds.json
 .vscode/settings.json
 .venv/
+scratch.md
+scratch/
 .DS_Store
+creds.json
