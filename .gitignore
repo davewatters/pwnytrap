@@ -1,14 +1,29 @@
+# Dev environment
+.DS_Store
+.github/
+scratch/
+scratch.md
+temp/
+tmp/
+
+# Node.js
+node_modules/
+package-lock.json
+
+# Other
 core.Microsoft*
 core.mongo*
 core.python*
+creds.json
+
+# Python
+.env
+env
 env.py
 __pycache__/
 *.py[cod]
-node_modules/
-.github/
-.vscode/settings.json
 .venv/
-scratch.md
-scratch/
-.DS_Store
-creds.json
+venv/
+
+# VS Code
+.vscode/settings.json

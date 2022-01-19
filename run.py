@@ -250,7 +250,7 @@ class HibpAPI:
     def disp_breach_names(self, breaches):
         '''
         Displays the breach names in three columns.
-        Accepts list of breach dictionary.
+        Accepts list of breaches dictionary.
         '''
         print("")
         col = 0
