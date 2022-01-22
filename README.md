@@ -2,9 +2,9 @@
 
 ### A Python tool to query the https://haveibeenpwned.com API to see if a given password or email address has been compromised in a data breach.  
 
-<h2 align="center"><img src="readme-docs/pwnytrap-v1.0-main-screen.png"></h2>
+<!-- <h2 align="center"><img src="readme-docs/pwnytrap-v1.0-main-screen.png"></h2> -->
 
-## - Table of Contents -  
+## Table of Contents  
 * [Purpose](#purpose)
 * [Features](#features)
 * [Requirements](#requirements)
@@ -13,7 +13,7 @@
 * [Deployment](#deployment)
 * [Credits](#credits)
 
-## - Purpose -      
+## Purpose      
 [This app was created as the third Portfolio Project (PP3) for the Code Institute's Full Stack Web Development course. The app is to showcase Python skills, and as a requirement is deployed to Heroku using a Code Institute mock terminal template.]  
 
 PwnyTrap is Python tool to query the HaveIBeenPwned.com API to see if a given password or email address was compromised in a data breach.
@@ -21,7 +21,7 @@ PwnyTrap is Python tool to query the HaveIBeenPwned.com API to see if a given pa
 PwnyTrap's purpose on one level is to be a simple tool to easily enable password & email address lookups to the HaveIBeenPwned.com (aka HIBP) database. On another level, it was created as an idea for a Python module which could be imported for use in future projects to enhance IT security, for example, during a user signup/registration process.
 
 
-## - Features -    
+## Features    
 
 - **Check Password** The password is SHA-1 hashed then only the first five characters are used to build the search query for the API. This API 'range search' returns multiple hash suffixes to preserve the anonymity of the user. (You can read more about implementing password privacy using the _k-Anonymity model_ [here](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity).) 
 
@@ -33,8 +33,7 @@ PwnyTrap's purpose on one level is to be a simple tool to easily enable password
 - **Show All Breaches** returns all 500+ breach names in the HIBP database.
 
 
-## - Requirements -  
-
+## Requirements 
 - Python 3.6  
 - The following dependencies are imported:
     - `getpass`, `hashlib`, `json`, `re`, `requests`, `textwrap` 
@@ -48,12 +47,12 @@ PwnyTrap's purpose on one level is to be a simple tool to easily enable password
 ```
 
 
-## - Usage -  
+## Usage  
 ```
 python3 run.py
 ```
 
-## - Future Features and Bugs -  
+## Future Features and Bugs  
 
 ### Future Features
 -   Refactor the HibpAPI class to search on NTLM hashes (aka NTHash) of the given password.  Create an option or separate Active Directory test tool using HIBP's offline NTLM hash dump.
@@ -66,7 +65,7 @@ python3 run.py
 1. None known at this time
 
 
-## - Deployment -
+## Deployment
 
 ### Heroku  
 The Project repository (repo) is at [https://github.com/davewatters/pwnytrap](https://github.com/davewatters/pwnytrap)
@@ -90,7 +89,7 @@ Deployment of the site to Heroku was done as follows:
 1.  Your app can now be accessed via any browser at: `https://YOUR-APP-NAME.heroku.com`
 
 
-## - Credits - 
+## Credits 
 
 -   Project inspired by [Troy Hunt's](https:/troyhunt.com) [Have I Been Pwned](https://haveibeenpwned.com) website
 -   Full HIBP API v3 Specification Document [HERE](https://haveibeenpwned.com/API/v3)
