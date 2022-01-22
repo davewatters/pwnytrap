@@ -1,6 +1,6 @@
 # PwnyTrap
 
-### A Python tool to query the https://haveibeenpwned.com API to see if a given password or email address has been compromised in a data breach.  
+### A Python tool to query the [HaveIBeenPwned.com](https://haveibeenpwned.com) API to see if a given password or email address has been compromised in a data breach.  
 
 <!-- <h2 align="center"><img src="readme-docs/pwnytrap-v1.0-main-screen.png"></h2> -->
 
