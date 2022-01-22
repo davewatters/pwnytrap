@@ -27,6 +27,7 @@ from requests.models import HTTPError
 
 
 TEST_TAG = "This is just for testing and will be removed"
+TEST_TAG2 = "This is just for testing and will be removed"
 
 
 APP_VERSION = 'PwnyTrap v1.1'
