@@ -49,7 +49,7 @@ PwnyTrap's purpose on one level is to be a simple tool to easily enable password
 
 ## Usage  
 ```
-python3 run.py
+python3 pwnytrap.py
 ```
 
 ## Future Features and Bugs  
