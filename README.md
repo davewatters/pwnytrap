@@ -34,16 +34,17 @@ PwnyTrap's purpose on one level is to be a simple tool to easily enable password
 
 ## Requirements 
 - Python 3.6  
-- The following dependencies are imported:
-    - `getpass`, `hashlib`, `json`, `re`, `requests`, `textwrap` 
-
-
-- **API Key** To search for compromised email addresses this app requires a valid HaveIBeenPwned.com API Key and when first run the program checks for its presence in a file called `creds.json`.  The key is not required for password searches.  The credentials file has the following format:
-```
-{
-  "hibp-api-key": "[_SECRET_API_KEY_]"
-}
-```
+- The following dependencies are required:
+    ```
+    pip install requests
+    ```
+- HIBP v3 API Key  
+    To search for compromised email addresses this app requires a valid [HaveIBeenPwned.com API Key](https://haveibeenpwned.com/API/Key).  The key is not required for password searches.  When the program is run it checks for the key in a file called `creds.json`, which has the following format:
+    ```
+    {
+      "hibp-api-key": "[_SECRET_API_KEY_]"
+    }
+    ```
 
 
 ## Usage  
@@ -67,7 +68,7 @@ python3 run.py
 ## Deployment
 
 ### Heroku  
-The Project repository (repo) is at [https://github.com/davewatters/pwnytrap](https://github.com/davewatters/pwnytrap)
+The GitHub Project repo is at [https://github.com/davewatters/pwnytrap](https://github.com/davewatters/pwnytrap)
 
 Note: The project repo was initially imported from my [Code Institute Portfolio Project 3](https://github.com/davewatters/pwnytrap-ci-pp3) and the live deployed project can be viewed on Heroku [HERE](https://ci-pp3-pwnytrap.herokuapp.com)
 
