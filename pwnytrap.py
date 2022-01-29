@@ -15,15 +15,16 @@
 #
 # Python3, HIBP API v3
 ##
+# import argparse
 import getpass
 import hashlib
 import json
 from json.decoder import JSONDecodeError
 import re
 import requests
-import textwrap
-
 from requests.models import HTTPError
+import sys
+import textwrap
 
 
 APP_VERSION = 'PwnyTrap v1.1'
@@ -124,7 +125,7 @@ class HibpAPI:
         Load API key from creds file.
         '''
         init_creds_ok = False
-        print("\nChecking credentials file...")
+        print("Checking credentials file...")
         try:
             with open(CREDS_FILE, 'r') as f:
                 self.api_key = json.load(f)
@@ -442,16 +443,9 @@ def disp_main_page():
 
 def main():
     '''
-    Main program loop.
+    Main program loop for the interactive mode menu.
     Displays the main screen and menu control loop.
     '''
-    disp_app_info()
-    hibp = HibpAPI()
-    if not hibp.init_api_key():
-        print("Program can't continue without valid credentials file.")
-        print("Goodbye.")
-        exit(1)
-
     disp_main_page()
     while True:
         opt = input("Enter your choice [0-4, or q to quit]: ")
@@ -476,6 +470,26 @@ def main():
         disp_main_page()
 
 
+_DEBUG_ = False
+# _DEBUG_ = True
 ##
-main()
+if __name__ == "__main__":
+    disp_app_info()
+    hibp = HibpAPI()
+    if not hibp.init_api_key():
+        print("Program can't continue without valid credentials file.")
+        print("Goodbye.")
+        exit(1)
+
+    if sys.argv[1:]:
+        if sys.argv[1] == '-e':
+            hibp.check_breached(sys.argv[2])
+    else:
+        main()
+    print("Goodbye.\n")
+
+    if _DEBUG_:
+        print(f"Arguments count: {len(sys.argv)}")
+        for i, arg in enumerate(sys.argv):
+            print(f"Argument {i:>6}: {arg}")
 ##
