@@ -125,7 +125,7 @@ class HibpAPI:
         Load API key from creds file.
         '''
         init_creds_ok = False
-        print("Checking credentials file...")
+        print("Checking credentials file..")
         try:
             with open(CREDS_FILE, 'r') as f:
                 self.api_key = json.load(f)
@@ -207,7 +207,7 @@ class HibpAPI:
 
     def check_passwd(self, password):
         passwd_hash = hashlib.sha1(password.encode('utf-8')).hexdigest()
-        print('\nPassword encrypted...')
+        print('\nPassword encrypted.')
         print(f'SHA-1 hash digest of password: {passwd_hash}')
         # only use first five chars of hash to search
         search_hash = passwd_hash[:5].upper()
@@ -478,15 +478,16 @@ if __name__ == "__main__":
     hibp = HibpAPI()
     if not hibp.init_api_key():
         print("Program can't continue without valid credentials file.")
-        print("Goodbye.")
         exit(1)
 
     if sys.argv[1:]:
         if sys.argv[1] == '-e':
             hibp.check_breached(sys.argv[2])
+        elif sys.argv[1] == '-p':
+            HibpAPI().check_passwd(sys.argv[2])
     else:
         main()
-    print("Goodbye.\n")
+    print("")
 
     if _DEBUG_:
         print(f"Arguments count: {len(sys.argv)}")
