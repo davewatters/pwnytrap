@@ -27,7 +27,7 @@ import sys
 import textwrap
 
 
-APP_VERSION = 'PwnyTrap v1.1'
+APP_VERSION = 'PwnyTrap v1.1.2'
 CREDS_FILE = 'creds.json'
 HIBP_API_URL = 'https://haveibeenpwned.com/api/v3/'
 HIBP_PWD_API_URL = 'https://api.pwnedpasswords.com/range/'
@@ -125,26 +125,26 @@ class HibpAPI:
         Load API key from creds file.
         '''
         init_creds_ok = False
-        print("Checking credentials file..")
+        print("Checking credentials file..", end=' ')
         try:
             with open(CREDS_FILE, 'r') as f:
                 self.api_key = json.load(f)
         except OSError as e:
             # Can't open file - file not found..?
             errno, strerr = e.args
-            print(f"Error accessing {CREDS_FILE}. I/O Error {errno}: {strerr}")
             print("API Key not set.")
+            print(f"Error accessing {CREDS_FILE}. I/O Error {errno}: {strerr}")
         except JSONDecodeError as e:
             # File open, can't read data - invalid JSON..?
+            print("API Key not set.")
             print(f"Error reading {CREDS_FILE}...")
             print(f"{e}")
-            print("API Key not set.")
         except Exception as e:
             # Something else unknown went wrong..
-            print(f"Error occurred processing {CREDS_FILE}...")
+            print(f"\nError occurred processing {CREDS_FILE}...")
             print(f"{e}")
         else:
-            print("Credentials file read OK.")
+            print("Credentials file OK.")
             init_creds_ok = True
 
         return init_creds_ok
@@ -207,7 +207,7 @@ class HibpAPI:
 
     def check_passwd(self, password):
         passwd_hash = hashlib.sha1(password.encode('utf-8')).hexdigest()
-        print('\nPassword encrypted.')
+        print('Password encrypted.')
         print(f'SHA-1 hash digest of password: {passwd_hash}')
         # only use first five chars of hash to search
         search_hash = passwd_hash[:5].upper()
@@ -369,7 +369,7 @@ def check_password():
     Checks password for inclusion in HIBP breached passwords database
     '''
     while True:
-        print('\nChecking password...\n')
+        print('\nChecking password..')
         print("* Only partial SHA-1 hash of password will be sent to API")
         print("* Password will not be logged or sent over the internet\n")
         passwd = getpass.getpass('Enter password to check: ')
@@ -484,7 +484,7 @@ if __name__ == "__main__":
         if sys.argv[1] == '-e':
             hibp.check_breached(sys.argv[2])
         elif sys.argv[1] == '-p':
-            HibpAPI().check_passwd(sys.argv[2])
+            check_password()
     else:
         main()
     print("")
