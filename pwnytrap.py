@@ -15,18 +15,19 @@
 #
 # Python3, HIBP API v3
 ##
+# import argparse
 import getpass
 import hashlib
 import json
 from json.decoder import JSONDecodeError
 import re
 import requests
+from requests.models import HTTPError
+import sys
 import textwrap
 
-from requests.models import HTTPError
 
-
-APP_VERSION = 'PwnyTrap v1.1'
+APP_VERSION = 'PwnyTrap v1.1.2'
 CREDS_FILE = 'creds.json'
 HIBP_API_URL = 'https://haveibeenpwned.com/api/v3/'
 HIBP_PWD_API_URL = 'https://api.pwnedpasswords.com/range/'
@@ -124,26 +125,26 @@ class HibpAPI:
         Load API key from creds file.
         '''
         init_creds_ok = False
-        print("\nChecking credentials file...")
+        print("Checking credentials file..", end=' ')
         try:
             with open(CREDS_FILE, 'r') as f:
                 self.api_key = json.load(f)
         except OSError as e:
             # Can't open file - file not found..?
             errno, strerr = e.args
-            print(f"Error accessing {CREDS_FILE}. I/O Error {errno}: {strerr}")
             print("API Key not set.")
+            print(f"Error accessing {CREDS_FILE}. I/O Error {errno}: {strerr}")
         except JSONDecodeError as e:
             # File open, can't read data - invalid JSON..?
+            print("API Key not set.")
             print(f"Error reading {CREDS_FILE}...")
             print(f"{e}")
-            print("API Key not set.")
         except Exception as e:
             # Something else unknown went wrong..
-            print(f"Error occurred processing {CREDS_FILE}...")
+            print(f"\nError occurred processing {CREDS_FILE}...")
             print(f"{e}")
         else:
-            print("Credentials file read OK.")
+            print("Credentials file OK.")
             init_creds_ok = True
 
         return init_creds_ok
@@ -206,7 +207,7 @@ class HibpAPI:
 
     def check_passwd(self, password):
         passwd_hash = hashlib.sha1(password.encode('utf-8')).hexdigest()
-        print('\nPassword encrypted...')
+        print('Password encrypted.')
         print(f'SHA-1 hash digest of password: {passwd_hash}')
         # only use first five chars of hash to search
         search_hash = passwd_hash[:5].upper()
@@ -368,7 +369,7 @@ def check_password():
     Checks password for inclusion in HIBP breached passwords database
     '''
     while True:
-        print('\nChecking password...\n')
+        print('\nChecking password..')
         print("* Only partial SHA-1 hash of password will be sent to API")
         print("* Password will not be logged or sent over the internet\n")
         passwd = getpass.getpass('Enter password to check: ')
@@ -442,16 +443,9 @@ def disp_main_page():
 
 def main():
     '''
-    Main program loop.
+    Main program loop for the interactive mode menu.
     Displays the main screen and menu control loop.
     '''
-    disp_app_info()
-    hibp = HibpAPI()
-    if not hibp.init_api_key():
-        print("Program can't continue without valid credentials file.")
-        print("Goodbye.")
-        exit(1)
-
     disp_main_page()
     while True:
         opt = input("Enter your choice [0-4, or q to quit]: ")
@@ -476,6 +470,27 @@ def main():
         disp_main_page()
 
 
+_DEBUG_ = False
+# _DEBUG_ = True
 ##
-main()
+if __name__ == "__main__":
+    disp_app_info()
+    hibp = HibpAPI()
+    if not hibp.init_api_key():
+        print("Program can't continue without valid credentials file.")
+        exit(1)
+
+    if sys.argv[1:]:
+        if sys.argv[1] == '-e':
+            hibp.check_breached(sys.argv[2])
+        elif sys.argv[1] == '-p':
+            check_password()
+    else:
+        main()
+    print("")
+
+    if _DEBUG_:
+        print(f"Arguments count: {len(sys.argv)}")
+        for i, arg in enumerate(sys.argv):
+            print(f"Argument {i:>6}: {arg}")
 ##

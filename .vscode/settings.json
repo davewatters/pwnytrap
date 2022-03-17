@@ -24,4 +24,5 @@
    "workbench.colorTheme": "Visual Studio Dark",
    "editor.defaultFormatter": "HookyQR.beautify",
    "python.pythonPath": "/Users/davidwatters/dev/pwnytrap/.venv/bin/python"
+   "python.defaultInterpreterPath": "/Users/davidwatters/dev/pwnytrap/.venv/bin/python"
 }

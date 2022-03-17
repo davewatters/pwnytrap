@@ -1,8 +1,12 @@
+# Data files
+*.sqlite3
+
 # Dev environment
 .DS_Store
 .github/
 scratch/
 scratch.md
+*.swp
 temp/
 tmp/
 
@@ -25,5 +29,9 @@ __pycache__/
 .venv/
 venv/
 
+# Testing
+.coverage
+htmlcov
+
 # VS Code
-.vscode/settings.json
+.vscode/
