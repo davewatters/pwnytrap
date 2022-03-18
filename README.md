@@ -14,11 +14,10 @@
 * [Credits](#credits)
 
 ## Purpose      
-PwnyTrap is Python tool to query the HaveIBeenPwned.com API to see if a given password or email address was compromised in a data breach.
+PwnyTrap is Python cmd line tool to query the HaveIBeenPwned.com API to see if a given password or email address was compromised in a data breach.
 
 PwnyTrap's purpose on one level is to be a simple tool to easily enable password & email address lookups to the HaveIBeenPwned.com (aka HIBP) database. On another level, it was created as an idea for a Python module which could be imported for use in future projects to enhance IT security, for example, during a user signup/registration process.
 
-[This app was created as the third Portfolio Project (PP3) for the Code Institute's Full Stack Web Development course. The app is to showcase Python skills, and as a requirement is deployed to Heroku using a Code Institute mock terminal template.]  
 
 ## Features    
 
@@ -33,31 +32,31 @@ PwnyTrap's purpose on one level is to be a simple tool to easily enable password
 
 
 ## Requirements 
-- Python 3.6  
+- Python 3.6+  
 - The following dependencies are required:
     ```
     pip install requests
     ```
 - HIBP v3 API Key  
-    To search for compromised email addresses this app requires a valid [HaveIBeenPwned.com API Key](https://haveibeenpwned.com/API/Key).  The key is not required for password searches.  When the program is run it checks for the key in a file called `creds.json`, which has the following format:
+    To search for compromised **email addresses** this app requires a valid [HaveIBeenPwned.com API Key](https://haveibeenpwned.com/API/Key).  When the program is run it checks for the key in a file called `creds.json`, which has the following format:
     ```
     {
       "hibp-api-key": "[_SECRET_API_KEY_]"
     }
     ```
-
+    Note that this key is not required for password searches.  
 
 ## Usage  
+See [Deployment](#deployment) below for details of creating a helpful wrapper script, otherwise basic usage is: 
 ```
-python3 run.py
+python3 pwnytrap.py [ -p|-e <email_address> ]
 ```
 
 ## Future Features and Bugs  
 
 ### Future Features
 -   Refactor the HibpAPI class to search on NTLM hashes (aka NTHash) of the given password.  Create an option or separate Active Directory test tool using HIBP's offline NTLM hash dump.
--   Create an option (or new tool) to scan a company's whole email domain for accounts exposed in a breach
--   Any idea that helps the IT security team identify vulnerabilites or encourages better end user security practises  
+-   Create an option (or new tool) to scan a company's whole email domain for accounts exposed in a breach 
 
 
 ### Bugs  
@@ -67,30 +66,21 @@ python3 run.py
 
 ## Deployment
 
-### Heroku  
-The GitHub Project repo is at [https://github.com/davewatters/pwnytrap](https://github.com/davewatters/pwnytrap)
-
-Note: The project repo was initially imported from my [Code Institute Portfolio Project 3](https://github.com/davewatters/pwnytrap-ci-pp3) and the live deployed project can be viewed on Heroku [HERE](https://ci-pp3-pwnytrap.herokuapp.com)
-
-Deployment of the site to Heroku was done as follows:
- 
-1.  Login to your Heroku account
-1.  Create a New App
-1.  (Important!) Select the 'Settings' tab first
-1.  Click on 'Reveal Config Vars'
-1.  Add any relevant config vars by entering the KEY/VALUE pair data, e.g. PORT & 8000
-1.  Select 'Add Buildpack'
-1.  (Important!) Select Python first, then select NodeJS
-1.  Select the 'Deploy' tab
-1.  For the Deplyoment Method select GitHub
-1.  Connect to GitHub repo by entering YOUR-REPO-NAME, then Connect
-1.  A message will confirm that your app was successfuly deployed
-1.  Test that the site has successfully gone live by clicking on the 'View' button
-1.  Your app can now be accessed via any browser at: `https://YOUR-APP-NAME.heroku.com`
+Use Vim to create a small wrapper script and deploy to `~/bin/pwnytrap.sh`. 
+```
+#!/usr/bin/env bash
+PWNY_DIR=~/dev/pwnytrap/
+last_wd=${pwd}
+cd ${PWNY_DIR}
+python3 ${PWNY_DIR}pwnytrap.py $1 $2
+cd ${last_wd}
+```
+Just edit `PWNY_DIR` on line 2 to point to wherever you put your copy of `pwnytrap.py` and the `creds.json` files. Finally, `alias pwnytrap='pwnytrap.sh $1 $2'`.
 
 
 ## Credits 
 
+Full details available at the GitHub Project repo:  [https://github.com/davewatters/pwnytrap](https://github.com/davewatters/pwnytrap)
 -   Project inspired by [Troy Hunt's](https:/troyhunt.com) [Have I Been Pwned](https://haveibeenpwned.com) website
 -   Full HIBP API v3 Specification Document [HERE](https://haveibeenpwned.com/API/v3)
 
@@ -101,7 +91,9 @@ Deployment of the site to Heroku was done as follows:
     https://github.com/lionheart/pwnedpasswords    
     https://github.com/RubikX/HIBP-Python/  
 
+
 ### Acknowledgements
 
--   The HIBP database and API were created by [Troy Hunt](https:/troyhunt.com) and licensed under the [Creative Commons Attribution 4.0 International Licence](https://creativecommons.org/licenses/by/4.0/)
+-   The HIBP API was created by [Troy Hunt](https:/troyhunt.com) and is licensed under the [Creative Commons Attribution 4.0 International Licence](https://creativecommons.org/licenses/by/4.0/)
 
+- This app was originally created as the third Portfolio Project (PP3) for the Code Institute's Full Stack Web Development course. The app was to showcase Python skills, and as a requirement was deployed to Heroku using a Code Institute mock terminal template.]  
