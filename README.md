@@ -14,14 +14,14 @@
 * [Credits](#credits)
 
 ## Purpose      
-PwnyTrap is Python cmd line tool to query the HaveIBeenPwned.com API to see if a given password or email address was compromised in a data breach.
+PwnyTrap is Python tool to query the HaveIBeenPwned.com API to see if a given password or email address was compromised in a data breach.
 
-PwnyTrap's purpose on one level is to be a simple tool to easily enable password & email address lookups to the HaveIBeenPwned.com (aka HIBP) database. On another level, it was created as an idea for a Python module which could be imported for use in future projects to enhance IT security, for example, during a user signup/registration process.
+PwnyTrap's primary purpose is as a command line tool to enable quick password & email address lookups to the HaveIBeenPwned.com (aka HIBP) database. Additionally, it was created with an idea in mind for a Python module which could be imported for use in future projects to enhance IT security, for example, during a user signup/registration process.  This concept of not allowing breached password reuse is discussed in detail in [Troy Hunt's blog post](https://www.troyhunt.com/introducing-306-million-freely-downloadable-pwned-passwords/) written after the release of the updated [NIST Digital Identity Guidelines (SP 800-63)](https://www.nist.gov/special-publication-800-63). Basically, NIST specifically recommend that users' passwords are checked against those found in data breaches so that they can not be reused.
 
 
 ## Features    
 
-- **Check Password** The password is SHA-1 hashed then only the first five characters are used to build the search query for the API. This API 'range search' returns multiple hash suffixes to preserve the anonymity of the user. (You can read more about implementing password privacy using the _k-Anonymity model_ [here](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity).) 
+- **Check Password** firstly hashes the input value, then takes only the first five characters of that SHA-1 hash to build the search query for the API. This API 'range search' returns multiple hash suffixes which help preserve the anonymity of the user. (You can read more about implementing password privacy using the _k-Anonymity model_ [here](https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/#cloudflareprivacyandkanonymity).) 
 
 
 - **Check Email Address** allows the user to type in an email address. The input is checked to ensure that a valid, i.e. a _correctly formatted_, email address was entered (does _not_ check if it is a live email account)
@@ -52,17 +52,6 @@ See [Deployment](#deployment) below for details of creating a helpful wrapper sc
 python3 pwnytrap.py [ -p|-e <email_address> ]
 ```
 
-## Future Features and Bugs  
-
-### Future Features
--   Refactor the HibpAPI class to search on NTLM hashes (aka NTHash) of the given password.  Create an option or separate Active Directory test tool using HIBP's offline NTLM hash dump.
--   Create an option (or new tool) to scan a company's whole email domain for accounts exposed in a breach 
-
-
-### Bugs  
-
-1. None known at this time
-
 
 ## Deployment
 
@@ -75,8 +64,19 @@ cd ${PWNY_DIR}
 python3 ${PWNY_DIR}pwnytrap.py $1 $2
 cd ${last_wd}
 ```
-Just edit `PWNY_DIR` on line 2 to point to wherever you put your copy of `pwnytrap.py` and the `creds.json` files. Finally, `alias pwnytrap='pwnytrap.sh $1 $2'`.
+Edit `PWNY_DIR` on line 2 to point to wherever you put your copy of `pwnytrap.py` and the `creds.json` files. Finally, `alias pwnytrap='pwnytrap.sh $1 $2'`.
 
+
+## Future Features and Bugs  
+
+### Future Features
+-   Refactor the HibpAPI class to search on NTLM hashes (aka NTHash) of the given password.  Create an option or separate Active Directory test tool using HIBP's offline NTLM hash dump.
+-   Create an option (or new tool) to scan a company's whole email domain for accounts exposed in a breach 
+
+
+### Bugs  
+
+1. None known at this time
 
 ## Credits 
 
